@@ -7,7 +7,21 @@
 
 constexpr double pi = 3.14159265358979323846;
 
-class MyArray{
+//--------------------Настройка параметров--------------------
+
+constexpr double L = 80;
+constexpr int N = 200;
+constexpr double h = L / N;
+constexpr double dt = 1e-4;
+constexpr int T_steps = 1'000'000;
+constexpr double eps = 0.4;
+constexpr int moment_in_frame = 10'000;
+constexpr double total_time = dt*T_steps; 
+
+//------------------------------------------------------------
+
+
+class MyArray {
     int size_ = 0;
     double * data = nullptr;
     double l = 0.0;
@@ -101,25 +115,13 @@ public:
 };
 
 
-
-//--------------------Настройка параметров--------------------
-
-constexpr double L = 80;
-constexpr int N = 200;
-constexpr double h = L / N;
-constexpr double dt = 1e-4;
-constexpr int T_steps = 1'000'000;
-constexpr double eps = 0.4;
-constexpr int moment_in_frame = 10'000;
-constexpr double total_time = dt*T_steps; 
-
-//------------------------------------------------------------
 void write_params(const char * path){
     std::ofstream os(path);
     os << T_steps<<std::endl;
     os << moment_in_frame<<std::endl;
     os << eps<<std::endl;
 }
+
 
 void MyArray::set_sinusoidal_condition(double q, double amplitude, double phase = 0.0) {
     for (int i = 0; i < size_; ++i){
@@ -130,6 +132,7 @@ void MyArray::set_sinusoidal_condition(double q, double amplitude, double phase 
         std::cout << "Conditions is not periodical";
 }
 
+
 void MyArray::set_book_condition() {
     double phi_0 = -0.275;
     double A = 0.5;
@@ -139,10 +142,12 @@ void MyArray::set_book_condition() {
         data[i] = phi_0 - 2*A/L * i*h + 3*A/2;
 }
 
+
 void MyArray::do_laplacian(MyArray & arr){
     for (int i = 0; i < size_; ++i)
         data[i] = (arr[i-1] - 2*arr[i] + arr[i+1]) / (h * h);
 }
+
 
 int main() {
     write_params("bin_data/params.txt");
