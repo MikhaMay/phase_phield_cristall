@@ -1,4 +1,6 @@
 bin_data/
+calculate_input_data/
+calculate_output_data/
+code_sources/calculate/main
 gif_data/
 venv/
-code_sources/calculate/main

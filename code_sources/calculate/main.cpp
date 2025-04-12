@@ -7,31 +7,14 @@
 #include <filesystem>
 
 
-void writeParameters(const std::string& path) {
-    std::ofstream os(path);
-    if (!os) {
-        throw std::runtime_error("Failed to open parameters file for writing: " + path);
-    }
-
-    os << SimParams::timeSteps << std::endl;
-    os << SimParams::outputInterval << std::endl;
-    os << SimParams::epsilon << std::endl;
-
-    os.close();
-    if (os.fail()) {
-        throw std::runtime_error("Error closing file after writing parameters: " + path);
-    }
-}
-
 int main() {
-    writeParameters(SimParams::Paths::paramsFile);
-    
-    // Инициализация полей с периодическими граничными условиями
-    GridField<BoundaryType::Periodic> phi(SimParams::gridSize, 0.0, 0.0);
-    GridField<BoundaryType::Periodic> phiNext(SimParams::gridSize, 0.0, 0.0);
-    GridField<BoundaryType::Periodic> eta(SimParams::gridSize, 0.0, 0.0);
-    GridField<BoundaryType::Periodic> tempField(SimParams::gridSize, 0.0, 0.0);
-    GridField<BoundaryType::Periodic> energies((SimParams::timeSteps / SimParams::outputInterval) + 1, 0.0, 0.0);
+    SimParams::writeParameters(SimParams::Paths::paramsFile);
+
+    GridField<SimParams::boundaryType> phi(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> phiNext(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> eta(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> tempField(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> energies((SimParams::timeSteps / SimParams::outputInterval) + 1, 0.0, 0.0);
 
     // Установка начальных условий
     // phi.setSinusoidalInitialCondition(1.2, 0.4, SimParams::gridSpacing, SimParams::PI/2);
@@ -51,8 +34,8 @@ int main() {
         // Второй промежуточный шаг - вычисление tempField
         for (int i = 0; i < SimParams::gridSize; ++i) {
             tempField[i] = (-SimParams::epsilon * phi[i] + eta[i] + 
-                            (eta[i-1] - 2 * eta[i] + eta[i+1]) / hSquared + 
-                            phi[i] * phi[i] * phi[i]);
+                           (eta[i-1] - 2 * eta[i] + eta[i+1]) / hSquared + 
+                           phi[i] * phi[i] * phi[i]);
         }
 
         // Финальный шаг - вычисление следующего значения phi
@@ -78,7 +61,7 @@ int main() {
 
             // Отображение прогресса
             double progressPercent = 100.0 * step / SimParams::timeSteps;
-            std::cout << progressPercent << "%" << std::endl;
+            std::cout << progressPercent << "% - saved: " << SimParams::Paths::getDataFilePath(step) << std::endl;
         }
 
         // Обмен текущего и следующего полей phi
@@ -86,7 +69,9 @@ int main() {
     }
 
     // Сохранение итоговых данных энергии
-    energies.saveToFile(SimParams::Paths::energiesFile);
+    std::string energyFilePath = SimParams::Paths::getEnergiesFile();
+    energies.saveToFile(energyFilePath);
+    std::cout << "Energy data saved to: " << energyFilePath << std::endl;
 
     return 0;
 }
