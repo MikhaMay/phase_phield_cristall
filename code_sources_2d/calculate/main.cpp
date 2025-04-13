@@ -20,7 +20,7 @@ int main() {
     double waveNumberY = 2 * M_PI * 4 / SimParams::domainLengthY;
 
     // Choose one of the following initial conditions:
-    phi.setRandomInitialCondition(-0.6, 0.6);
+    phi.setRandomInitialCondition(-0.6, 0.0);
     // phi.setSinusoidalInitialCondition(waveNumberX, waveNumberY, 0.4, SimParams::gridSpacingX, SimParams::gridSpacingY, M_PI/2, M_PI/2);
     // phi.setBookInitialCondition(SimParams::domainLengthX, SimParams::domainLengthY, SimParams::gridSpacingX, SimParams::gridSpacingY);
     // phi.loadInitialConditionWithOffset(0.45, SimParams::Paths::initialConditionFile);
