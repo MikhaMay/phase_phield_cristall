@@ -94,32 +94,12 @@ public:
         delete[] values_;
     }
 
-    // Accessor methods
-    int sizeX() const { return sizeX_; }
-    int sizeY() const { return sizeY_; }
-    int totalSize() const { return sizeX_ * sizeY_; }
-
     // Access operator using template specialization
     inline double& operator()(int i, int j) {
         if (i >= 0 && i < sizeX_ && j >= 0 && j < sizeY_) {
             return values_[index(i, j)];
         }
         return accessWithBoundary<BType>(i, j);
-    }
-
-    // Direct access to internal array for iteration
-    inline double& at(int i) {
-        if (i >= 0 && i < sizeX_ * sizeY_) {
-            return values_[i];
-        }
-        throw std::out_of_range("Index out of range");
-    }
-
-    inline double at(int i) const {
-        if (i >= 0 && i < sizeX_ * sizeY_) {
-            return values_[i];
-        }
-        throw std::out_of_range("Index out of range");
     }
 
     inline double laplacian(int i, int j, double hxSquared, double hySquared) {
