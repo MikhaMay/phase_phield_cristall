@@ -8,6 +8,9 @@ import numpy as np
 import yaml
 
 
+CUSTOM_RUN_DIR = None
+
+
 @dataclass
 class Parameters:
     time_steps: int
@@ -30,8 +33,9 @@ class Parameters:
             grid_spacing = params['gridSpacing'],
         )
 
-
-latest_run_dir = Path(Path('calculate_output_data/latest_run.txt').read_text().strip())
+latest_run_dir = CUSTOM_RUN_DIR or Path(
+    Path('calculate_output_data/latest_run.txt').read_text().strip()
+)
 run_id = latest_run_dir.name
 params = Parameters.from_file(latest_run_dir / 'params.yaml')
 
