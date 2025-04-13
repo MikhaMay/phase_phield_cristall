@@ -3,6 +3,19 @@
 
 #include "grid_field.h"
 
+std::ostream& operator<<(std::ostream& os, const BoundaryType& type) {
+    switch (type) {
+        case BoundaryType::Periodic:
+            os << "Periodic";
+            break;
+        case BoundaryType::Fix:
+            os << "Fix";
+            break;
+        default:
+            throw std::invalid_argument("Unknown BoundaryType value");
+    }
+    return os;
+}
 
 template <BoundaryType BType>
 void GridField<BType>::saveToFile(const std::string& path) {

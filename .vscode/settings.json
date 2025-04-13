@@ -34,6 +34,7 @@
         "typeinfo": "cpp",
         "vector": "cpp",
         "algorithm": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "iomanip": "cpp"
     }
 }

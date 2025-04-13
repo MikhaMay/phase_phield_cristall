@@ -15,6 +15,8 @@ enum class BoundaryType {
     Fix,
 };
 
+std::ostream& operator<<(std::ostream& os, const BoundaryType& type);
+
 template <BoundaryType BType = BoundaryType::Periodic>
 class GridField {
 private:

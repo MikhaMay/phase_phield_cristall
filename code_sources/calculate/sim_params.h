@@ -9,6 +9,8 @@
 #include <stdexcept>
 
 namespace SimParams {
+    constexpr double PI = 3.14159265358979323846;
+
     // Simulation parameters
     constexpr double domainLength = 80.0;
     constexpr int gridSize = 200;
@@ -18,8 +20,6 @@ namespace SimParams {
     constexpr double epsilon = 0.4;
     constexpr int outputInterval = 10'000;
     constexpr double totalTime = timeStep * timeSteps;
-    constexpr double PI = 3.14159265358979323846;
-    // Тип граничных условий для симуляции
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
     // Custom tag for the current simulation
@@ -38,6 +38,7 @@ namespace SimParams {
                    << "_N" << gridSize
                    << "_eps" << std::setprecision(2) << epsilon
                    << "_dt" << std::scientific << std::setprecision(1) << timeStep
+                   << "_" << SimParams::boundaryType
                    << "_" << simulationTag;
             return prefix.str();
         }
@@ -45,46 +46,59 @@ namespace SimParams {
         // Parameter file
         const std::string paramsFile = outputDir + "params.yaml";
 
-        // Initial condition file - now in input directory
+        // Initial condition file
         const std::string initialConditionFile = inputDir + "initial_condition.bin";
-
-        // Custom initial condition paths
-        inline std::string getInitialConditionPath(const std::string& name) {
-            return inputDir + name + ".bin";
-        }
 
         // Data files with descriptive names
         inline std::string getDataFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
-            return outputDir + prefix + "_step" + std::to_string(step) + ".bin";
+            return outputDir + prefix + "/" + std::to_string(step) + ".bin";
         }
 
         // Energy data file with descriptive name
         inline std::string getEnergiesFile() {
             std::string prefix = getDescriptivePrefix();
-            return outputDir + prefix + "_energies.bin";
+            return outputDir + prefix + "/energies.bin";
         }
     }
 
-    void writeParameters(const std::string& path) {
-        std::ofstream os(path);
-        if (!os) {
-            throw std::runtime_error("Failed to open parameters file for writing: " + path);
+    void writeParameters() {
+        std::string directoryName = Paths::outputDir + Paths::getDescriptivePrefix();
+        std::filesystem::create_directories(directoryName);
+
+        // Write parameters to the new directory
+        std::string paramsFilePath = directoryName + "/params.yaml";
+        std::ofstream paramsFile(paramsFilePath);
+        if (!paramsFile) {
+            throw std::runtime_error("Failed to open parameters file for writing: " + paramsFilePath);
+        }
+    
+        paramsFile << "domainLength: " << SimParams::domainLength << std::endl;
+        paramsFile << "gridSize: " << SimParams::gridSize << std::endl;
+        paramsFile << "gridSpacing: " << SimParams::gridSpacing << std::endl;
+        paramsFile << "timeStep: " << SimParams::timeStep << std::endl;
+        paramsFile << "timeSteps: " << SimParams::timeSteps << std::endl;
+        paramsFile << "outputInterval: " << SimParams::outputInterval << std::endl;
+        paramsFile << "epsilon: " << SimParams::epsilon << std::endl;
+        paramsFile << "boundaryType: " << SimParams::boundaryType << std::endl;
+        paramsFile << "simulationTag: " << SimParams::simulationTag << std::endl;
+
+        paramsFile.close();
+        if (paramsFile.fail()) {
+            throw std::runtime_error("Error closing file after writing parameters: " + paramsFilePath);
         }
 
-        os << "domainLength: " << SimParams::domainLength << std::endl;
-        os << "gridSize: " << SimParams::gridSize << std::endl;
-        os << "gridSpacing: " << SimParams::gridSpacing << std::endl;
-        os << "timeStep: " << SimParams::timeStep << std::endl;
-        os << "timeSteps: " << SimParams::timeSteps << std::endl;
-        os << "outputInterval: " << SimParams::outputInterval << std::endl;
-        os << "epsilon: " << SimParams::epsilon << std::endl;
-        os << "boundaryType: " << (SimParams::boundaryType == BoundaryType::Periodic ? "Periodic" : "Fixed") << std::endl;
-        os << "simulationTag: " << SimParams::simulationTag << std::endl;
-    
-        os.close();
-        if (os.fail()) {
-            throw std::runtime_error("Error closing file after writing parameters: " + path);
+        std::string latestRunFilePath = Paths::outputDir + "/latest_run.txt";
+        std::ofstream latestRunFile(latestRunFilePath);
+        if (!latestRunFile) {
+            throw std::runtime_error("Failed to open latest run file for writing: " + latestRunFilePath);
+        }
+
+        latestRunFile << directoryName << std::endl;
+
+        latestRunFile.close();
+        if (latestRunFile.fail()) {
+            throw std::runtime_error("Error closing latest run file: " + latestRunFilePath);
         }
     }
 }

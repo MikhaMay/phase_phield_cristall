@@ -8,7 +8,7 @@
 
 
 int main() {
-    SimParams::writeParameters(SimParams::Paths::paramsFile);
+    SimParams::writeParameters();
 
     GridField<SimParams::boundaryType> phi(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> phiNext(SimParams::gridSize, 0.0, 0.0);
