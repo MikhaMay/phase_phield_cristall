@@ -26,22 +26,22 @@ int main() {
     // Основной цикл по времени
     for (int step = 0; step <= SimParams::timeSteps; ++step) {
         double hSquared = SimParams::gridSpacing * SimParams::gridSpacing;
-        
+
         // Первый промежуточный шаг - вычисление eta
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            eta[i] = phi[i] + (phi[i-1] - 2 * phi[i] + phi[i+1]) / hSquared;
+            eta[i] = phi[i] + phi.laplacian(i, hSquared);
         }
 
         // Второй промежуточный шаг - вычисление tempField
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            tempField[i] = (-SimParams::epsilon * phi[i] + eta[i] + 
-                           (eta[i-1] - 2 * eta[i] + eta[i+1]) / hSquared + 
-                           phi[i] * phi[i] * phi[i]);
+            tempField[i] = (-SimParams::epsilon * phi[i] + eta[i]
+                            + eta.laplacian(i, hSquared)
+                            + phi[i] * phi[i] * phi[i]);
         }
 
         // Финальный шаг - вычисление следующего значения phi
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            phiNext[i] = phi[i] + SimParams::timeStep * (tempField[i-1] - 2 * tempField[i] + tempField[i+1]) / hSquared;
+            phiNext[i] = phi[i] + SimParams::timeStep * tempField.laplacian(i, hSquared);
         }
 
         // Обработка и сохранение результатов с заданной периодичностью

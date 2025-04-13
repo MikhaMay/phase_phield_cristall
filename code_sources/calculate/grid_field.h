@@ -95,6 +95,10 @@ public:
         return accessWithBoundary<BType>(i);
     }
 
+    inline double laplacian(int i, double hSquared) {
+        return ((*this)[i-1] - 2 * (*this)[i] + (*this)[i+1]) / hSquared;
+    }    
+
     void swap(GridField& other) {
         std::swap(size_, other.size_);
         std::swap(values_, other.values_);
