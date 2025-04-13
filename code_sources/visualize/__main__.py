@@ -75,7 +75,7 @@ for frame in range(frames):
     axs[0].set_xlim(0, frames-1)
     if len(energies) > 0:
         axs[0].set_ylim(min(energies)*0.9, max(energies)*1.1)
-    axs[0].set_title(f'Энергия (ε = {params.epsilon})')
+    axs[0].set_title(f'Энергия')
 
     # График баланса фазы
     axs[1].plot(phi_balance, 'r-')
@@ -96,7 +96,7 @@ for frame in range(frames):
 
     axs[2].set_xlim(0, params.domain_length)
     axs[2].set_ylim(-1.2, 1.2)
-    axs[2].set_title(f'Фаза (t = {frame * params.output_interval * params.time_steps:.4f})')
+    axs[2].set_title('Фаза')
     axs[2].set_xlabel('x')
 
     # Сохранение изображения
@@ -112,7 +112,7 @@ for frame in range(frames):
 
 # Создание гифки
 tag = os.path.basename(latest_run_dir)
-gif_path = gifs_dir / f'run_id.gif'
+gif_path = gifs_dir / f'{run_id}.gif'
 print(f'Creating GIF: {gif_path}')
 
 with imageio.get_writer(gif_path, mode='I', fps=10) as writer:

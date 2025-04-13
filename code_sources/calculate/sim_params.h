@@ -9,8 +9,6 @@
 #include <stdexcept>
 
 namespace SimParams {
-    constexpr double PI = 3.14159265358979323846;
-
     // Simulation parameters
     constexpr double domainLength = 80.0;
     constexpr int gridSize = 200;
@@ -23,7 +21,7 @@ namespace SimParams {
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "default";
+    const std::string simulationTag = "from_random";
 
     // File paths
     namespace Paths {
