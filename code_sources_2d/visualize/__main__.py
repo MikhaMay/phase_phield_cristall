@@ -14,6 +14,7 @@ CUSTOM_RUN_DIR = None
 
 @dataclass
 class Parameters:
+    time_step: float
     time_steps: int
     output_interval: int
     epsilon: float
@@ -29,6 +30,7 @@ class Parameters:
         with open(path, 'r') as file:
             params = yaml.safe_load(file)
         return cls(
+            time_step=float(params['timeStep']),
             time_steps=params['timeSteps'],
             output_interval=params['outputInterval'],
             epsilon=params['epsilon'],
@@ -50,11 +52,15 @@ params = Parameters.from_file(latest_run_dir / 'params.yaml')
 
 # Read energies
 energy_file = os.path.join(latest_run_dir, 'energies.bin')
-with open(energy_file, 'rb') as file:
-    N = np.fromfile(file, dtype=np.int32, count=1)[0]
-    # Second dimension is always 1 for energies
-    M = np.fromfile(file, dtype=np.int32, count=1)[0]
-    energies = np.fromfile(file, dtype=np.float64, count=N*M)
+try:
+    with open(energy_file, 'rb') as file:
+        N = np.fromfile(file, dtype=np.int32, count=1)[0]
+        # Second dimension is always 1 for energies
+        M = np.fromfile(file, dtype=np.int32, count=1)[0]
+        energies = np.fromfile(file, dtype=np.float64, count=N*M)
+except FileNotFoundError as e:
+    print(e)
+    energies = []
 
 print(f'Loaded {len(energies)} energy values')
 
@@ -125,7 +131,7 @@ for frame in range(frames):
     fig.colorbar(im, ax=ax3, label='φ value')
 
     # Add time information
-    time = frame * params.output_interval * params.epsilon
+    time = frame * params.output_interval * params.time_step
     fig.suptitle(f'Time: {time:.2f}, Frame: {frame}/{frames-1}', fontsize=16)
 
     # Tight layout with space for suptitle
@@ -137,7 +143,7 @@ for frame in range(frames):
     plt.close(fig)
     filenames.append(filename)
 
-    print(f'Processed frame {frame+1}/{frames} ({int(frame/frames*100)}%)')
+    print(f'Processed frame {frame+1}/{frames} ({int(frame/frames*100)}%)\t{filename}')
 
 # Create GIF
 tag = os.path.basename(latest_run_dir)

@@ -12,11 +12,11 @@ namespace SimParams {
     // Simulation parameters
     constexpr double domainLengthX = 20.0;
     constexpr double domainLengthY = 20.0;
-    constexpr int gridSizeX = 20;
-    constexpr int gridSizeY = 20;
+    constexpr int gridSizeX = 64;
+    constexpr int gridSizeY = 64;
     constexpr double gridSpacingX = domainLengthX / gridSizeX;
     constexpr double gridSpacingY = domainLengthY / gridSizeY;
-    constexpr double timeStep = 1e-6;
+    constexpr double timeStep = 1e-8;
     constexpr int timeSteps = 100'000'000;
     constexpr double epsilon = 0.4;
     constexpr int outputInterval = 1'000'000;
