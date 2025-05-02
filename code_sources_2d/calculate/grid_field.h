@@ -126,6 +126,7 @@ public:
     // Methods requiring grid parameters
     void setSinusoidalInitialCondition(double waveNumberX, double waveNumberY, double amplitude, double gridSpacingX, double gridSpacingY, double phaseX = 0.0, double phaseY = 0.0);
     void setBookInitialCondition(double domainLengthX, double domainLengthY, double gridSpacingX, double gridSpacingY);
+    void setLoadHalfFromFileInitialCondition(const std::string& filePath, double constValue);
 };
 
 // Free function for swap following STL convention

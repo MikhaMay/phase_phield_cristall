@@ -167,6 +167,50 @@ void GridField<BType>::setBookInitialCondition(double domainLengthX, double doma
     }
 }
 
+template <BoundaryType BType>
+void GridField<BType>::setLoadHalfFromFileInitialCondition(const std::string& filePath, double constValue) {
+    // Загрузка данных из файла
+    std::ifstream file(filePath, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("Failed to open file: " + filePath);
+    }
+    
+    int tmpSizeX, tmpSizeY;
+    file.read(reinterpret_cast<char*>(&tmpSizeX), sizeof(tmpSizeX));
+    file.read(reinterpret_cast<char*>(&tmpSizeY), sizeof(tmpSizeY));
+    if (file.fail()) {
+        throw std::runtime_error("Failed to read size from file");
+    }
+
+    if (tmpSizeX != sizeX_ || tmpSizeY != sizeY_) {
+        throw std::runtime_error("tmpSizeX != halfX || tmpSizeY != sizeY_");
+    }
+
+    // Рассчитаем половину сетки
+    int halfX = sizeX_ / 2;
+
+    // Читаем данные
+    std::vector<double> tempData(tmpSizeX * tmpSizeY);
+    file.read(reinterpret_cast<char*>(tempData.data()), tmpSizeX * tmpSizeY * sizeof(double));
+    if (file.fail()) {
+        throw std::runtime_error("Failed to read data from file");
+    }
+
+    // Заполняем левую половину данными из файла
+    for (int i = 0; i < halfX; ++i) {
+        for (int j = 0; j < sizeY_; ++j) {
+            (*this)(i, j) = tempData[i * tmpSizeY + j];
+        }
+    }
+
+    // Заполняем правую половину константой
+    for (int i = halfX; i < sizeX_; ++i) {
+        for (int j = 0; j < sizeY_; ++j) {
+            (*this)(i, j) = constValue;
+        }
+    }
+}
+
 // Explicit template instantiations
 template class GridField<BoundaryType::Periodic>;
 template class GridField<BoundaryType::Fix>;

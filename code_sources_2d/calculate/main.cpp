@@ -16,11 +16,11 @@ int main() {
     GridField<SimParams::boundaryType> energies((SimParams::timeSteps / SimParams::outputInterval) + 1, 1, 0.0);
 
     // Set initial conditions
-    double waveNumberX = 2 * M_PI * 4 / SimParams::domainLengthX;
-    double waveNumberY = 2 * M_PI * 4 / SimParams::domainLengthY;
+    // double waveNumberX = 2 * M_PI * 4 / SimParams::domainLengthX;
+    // double waveNumberY = 2 * M_PI * 4 / SimParams::domainLengthY;
 
     // Choose one of the following initial conditions:
-    phi.setRandomInitialCondition(-0.6, 0.0);
+    phi.setLoadHalfFromFileInitialCondition(SimParams::Paths::initialConditionFile, -0.9);
     // phi.setSinusoidalInitialCondition(waveNumberX, waveNumberY, 0.4, SimParams::gridSpacingX, SimParams::gridSpacingY, M_PI/2, M_PI/2);
     // phi.setBookInitialCondition(SimParams::domainLengthX, SimParams::domainLengthY, SimParams::gridSpacingX, SimParams::gridSpacingY);
     // phi.loadInitialConditionWithOffset(0.45, SimParams::Paths::initialConditionFile);

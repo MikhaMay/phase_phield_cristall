@@ -115,7 +115,7 @@ for frame in range(frames):
     # Phase balance plot
     ax2.plot(phi_balance, 'r-')
     ax2.set_xlim(0, frames-1)
-    ax2.set_ylim(-0.5, 0.5)
+    ax2.set_ylim(-0.7, 0.1)
     ax2.set_title('Phase Balance - avg(phi)')
     ax2.set_xlabel('Frame')
     ax2.set_ylabel('Average φ')

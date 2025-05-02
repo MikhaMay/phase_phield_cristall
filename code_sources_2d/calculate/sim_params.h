@@ -12,19 +12,19 @@ namespace SimParams {
     // Simulation parameters
     constexpr double domainLengthX = 20.0;
     constexpr double domainLengthY = 20.0;
-    constexpr int gridSizeX = 64;
-    constexpr int gridSizeY = 64;
+    constexpr int gridSizeX = 40;
+    constexpr int gridSizeY = 40;
     constexpr double gridSpacingX = domainLengthX / gridSizeX;
     constexpr double gridSpacingY = domainLengthY / gridSizeY;
-    constexpr double timeStep = 1e-8;
-    constexpr unsigned long timeSteps = 5'000'000'000;
+    constexpr double timeStep = 1e-7;
+    constexpr unsigned long timeSteps = 500'000'000;
     constexpr double epsilon = 0.4;
-    constexpr unsigned long outputInterval = 50'000'000;
+    constexpr unsigned long outputInterval = 5'000'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "2d_random_-0.3avg";
+    const std::string simulationTag = "2d_half_from_file_-0.9";
 
     // File paths
     namespace Paths {
