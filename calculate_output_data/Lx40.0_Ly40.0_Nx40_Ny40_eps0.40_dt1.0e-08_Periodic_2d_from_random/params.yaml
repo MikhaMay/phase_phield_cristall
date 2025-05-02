@@ -1,0 +1,12 @@
+domainLengthX: 40
+domainLengthY: 40
+gridSizeX: 40
+gridSizeY: 40
+gridSpacingX: 1
+gridSpacingY: 1
+timeStep: 1e-08
+timeSteps: 10000000
+outputInterval: 100000
+epsilon: 0.4
+boundaryType: Periodic
+simulationTag: 2d_from_random
