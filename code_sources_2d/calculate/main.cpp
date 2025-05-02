@@ -26,7 +26,7 @@ int main() {
     // phi.loadInitialConditionWithOffset(0.45, SimParams::Paths::initialConditionFile);
 
     // Main time loop
-    for (int step = 0; step <= SimParams::timeSteps; ++step) {
+    for (unsigned long step = 0; step <= SimParams::timeSteps; ++step) {
         double hxSquared = SimParams::gridSpacingX * SimParams::gridSpacingX;
         double hySquared = SimParams::gridSpacingY * SimParams::gridSpacingY;
 
