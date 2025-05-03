@@ -10,6 +10,7 @@ from matplotlib import cm
 
 
 CUSTOM_RUN_DIR = None
+# Path('calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_random_-0.3avg')
 
 
 @dataclass
@@ -80,6 +81,13 @@ x = np.linspace(0, params.domain_length_x, params.grid_size_x)
 y = np.linspace(0, params.domain_length_y, params.grid_size_y)
 X, Y = np.meshgrid(x, y)
 
+# Create a higher resolution grid for smooth interpolation
+x_high_res = np.linspace(0, params.domain_length_x, params.grid_size_x * 2)
+y_high_res = np.linspace(0, params.domain_length_y, params.grid_size_y * 2)
+X_high_res, Y_high_res = np.meshgrid(x_high_res, y_high_res)
+
+# from scipy.interpolate import interp2d
+
 for frame in range(frames):
     data_file = os.path.join(latest_run_dir, f'{frame * params.output_interval}.bin')
 
@@ -95,19 +103,18 @@ for frame in range(frames):
     phi_balance.append(np.mean(phi))
 
     # Create a figure with three subplots
-    fig = plt.figure(figsize=(15, 10))
+    fig = plt.figure(figsize=(20, 10))
     
     # Top row: Energy and Phase Balance
     ax1 = plt.subplot2grid((2, 2), (0, 0))
-    ax2 = plt.subplot2grid((2, 2), (0, 1))
+    ax2 = plt.subplot2grid((2, 2), (1, 0))
     # Bottom row: 2D phase plot
-    ax3 = plt.subplot2grid((2, 2), (1, 0), colspan=2)
+    ax3 = plt.subplot2grid((2, 2), (0, 1), rowspan=2)
 
     # Energy plot
     ax1.plot(energies[:frame+1], 'r-')
     ax1.set_xlim(0, frames-1)
-    if len(energies) > 0:
-        ax1.set_ylim(min(energies)*0.9, max(energies)*1.1)
+    ax1.set_ylim(0, 30)
     ax1.set_title('Energy')
     ax1.set_xlabel('Frame')
     ax1.set_ylabel('Energy')
@@ -120,8 +127,22 @@ for frame in range(frames):
     ax2.set_xlabel('Frame')
     ax2.set_ylabel('Average φ')
 
-    # 2D phase plot
-    im = ax3.pcolormesh(X, Y, phi.T, cmap=cm.coolwarm, vmin=-1.0, vmax=1.0)
+    # 2D phase plot with interpolation - use one of the following options:
+    
+    # OPTION 1: Using pcolormesh with gouraud shading for color interpolation
+    im = ax3.pcolormesh(X, Y, phi.T, cmap=cm.coolwarm, vmin=-1.0, vmax=1.0, shading='gouraud')
+    
+    # OPTION 2: Using imshow with interpolation
+    # extent = [0, params.domain_length_x, 0, params.domain_length_y]
+    # im = ax3.imshow(phi.T, cmap=cm.coolwarm, vmin=-1.0, vmax=1.0, 
+    #                origin='lower', extent=extent, interpolation='bicubic')
+    
+    # OPTION 3: Using scipy for more advanced interpolation
+    # f = interp2d(x, y, phi.T, kind='cubic')
+    # phi_smooth = f(x_high_res, y_high_res)
+    # im = ax3.pcolormesh(X_high_res, Y_high_res, phi_smooth, 
+    #                    cmap=cm.coolwarm, vmin=-1.0, vmax=1.0)
+    
     ax3.set_title('Phase Field (φ)')
     ax3.set_xlabel('x')
     ax3.set_ylabel('y')
@@ -147,7 +168,8 @@ for frame in range(frames):
 
 # Create GIF
 tag = os.path.basename(latest_run_dir)
-gif_path = gifs_dir / f'{run_id}.gif'
+custom_tag = 'interpolate'
+gif_path = gifs_dir / f'{run_id}_{custom_tag}.gif'
 print(f'Creating GIF: {gif_path}')
 
 with imageio.get_writer(gif_path, mode='I', fps=8) as writer:
