@@ -24,7 +24,7 @@ namespace SimParams {
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "2d_half_from_file_-0.9";
+    const std::string simulationTag = "2d_half_from_file_+0.9";
 
     // File paths
     namespace Paths {
