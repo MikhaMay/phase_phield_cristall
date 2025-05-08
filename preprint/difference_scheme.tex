@@ -1,0 +1,120 @@
+%
+% difference_scheme.tex
+%
+
+\section{Разностная схема}
+
+
+Уравнения модели фазового поля являются нелинейными уравнениями высокого порядка. В силу этого их теоретический анализ сильно затруднён. Поэтому представляет интерес их численное исследование \cite{elsey_2012, moats_2018, zhuang_2021}
+
+
+%-------
+Для дальнейшего изучения уравнение эволюции фазового поля~($\ref{evolution_eq}$) удобно записать в эквивалентном виде.
+
+Введём поток \(Q\):
+\begin{equation*}
+    Q \equiv - K \operatorname{grad}\left[\alpha \phi - \beta \Delta \phi + \gamma \Delta^2 \phi +
+    \epsilon \phi (\phi^2 - 1)\right].
+\end{equation*}
+
+Запишем~($\ref{evolution_eq}$) в виде уравнения непрерывности:
+\begin{equation} \label{neprerivn}
+    \frac{\partial \phi}{\partial t} + \operatorname{div} (Q) = 0.
+\end{equation}
+
+Согласно теореме Остроградского–Гаусса, примененной к области $\omega$ с границей $\partial \omega$, получаем:
+
+\begin{equation*}
+    \int \limits_{\omega}  \frac{\partial \phi}{\partial t} \, d V + 
+    \oint \limits_{\partial \omega} (Q \cdot dS) = 0.
+\end{equation*}
+Это соотношение выражает баланс фазового поля $\phi$ в области $\omega$.
+
+В одномерном случае для $\omega = [x_-, x_+]$, имеем:
+
+\begin{equation*}
+    \int \limits_{\omega}  \frac{\partial \phi}{\partial t} \, d x + 
+    \left [ Q^{+} - Q^{-} \right ] = 0,
+\end{equation*}
+
+Откуда:
+\begin{equation*}
+    0 = \int \limits_{\omega}  \frac{\partial \phi}{\partial t} \, d x + \left [ Q^{+} - Q^{-} \right ] =  | \omega |  \frac{\partial \phi}{\partial t} + \left[ Q^{+} - Q^{-} \right],
+\end{equation*}
+где $|\omega|$~--- длина интервала, $Q^{-}$ и $Q^{+}$~--- потоки через границы $x_-, x_+$.
+
+%-------
+
+
+Рассмотрим уравнение на отрезке $\Omega = [0, L] \subset \mathbb{R}$. На границе области будем считать заданными одни из следующих граничных условий:
+\begin{enumerate}
+    \item периодические граничные условия:
+    \begin{equation*}
+        \phi(0) = \phi(L), \quad \Delta \phi(0) = \Delta \phi(L), \quad \Delta^2 \phi(0) = \Delta^2 \phi(L);
+    \end{equation*}
+    \item фиксированные граничные условия:
+    \begin{equation*}
+        \phi(0) = - \phi(L) = 1, \quad \Delta \phi(0) = \Delta \phi(L) = \Delta^2 \phi(0) = \Delta^2 \phi(L) = 0.
+    \end{equation*}
+\end{enumerate}
+В начальный момент времени при $t = 0$, задано начальное условие 
+\begin{equation*}
+    \phi(x, 0) = \phi_0(x).
+\end{equation*}
+Для дискретизации уравнения и граничных условий используем одномерную пространственную сетку с количеством узлов \(N\), шагом \(h\) и временной шаг \( \Delta t \). Пространственные узлы будем нумеровать целыми числами от \(1\) до \(N\).
+
+Первую производную по времени можно аппроксимировать конечной разностью, используя явный метод Эйлера:
+\begin{equation*}
+    \frac{\partial \phi}{\partial t} \approx \frac{\phi^{n+1}_k - \phi^n_k}{\Delta t},
+\end{equation*}
+где \( \phi^n_k \) обозначает значение \( \phi \) в точке с индексом \( k \) на временном слое \( n \).
+
+Для лапласиана \( \Delta \phi \) используем центральную разностную схему:
+
+\begin{equation*}
+    \Delta \phi_k^n \approx \frac{\phi_{k+1}^n - 2\phi_k^n + \phi_{k-1}^n}{h^2}.
+\end{equation*}
+
+Для билапласиана \( \Delta^2 \phi \) используем аналогичную схему:
+\begin{equation*}
+    \Delta^2 \phi_k^n \approx \frac{\phi_{k+2}^n - 4\phi_{k+1}^n + 6\phi_k^n - 4\phi_{k-1}^n + \phi_{k-2}^n}{h^4}.
+\end{equation*}
+
+
+Теперь мы можем записать выражение для аппроксимации потока \( Q \):
+\begin{align*}
+    Q_k^n &= K \left(- \alpha \frac{\phi_{k+1}^n - \phi_{k-1}^n}{2h} + \beta \frac{\Delta \phi_{k+1}^n - \Delta \phi_{k-1}^n}{2h} - \right. \\
+    &\quad \left. - \gamma \frac{\Delta^2 \phi_{k+1}^n - \Delta^2 \phi_{k-1}^n}{2h} - \epsilon \frac{\phi^{n}_{k+1} \left(  (\phi^{n}_{k+1})^2 - 1 \right) - \phi^{n}_{k-1} \left( (\phi^{n}_{k-1})^2 - 1 \right)}{2h} \right).
+\end{align*}
+
+Используя приведённые выше аппроксимации, окончательно получаем дискретное уравнение:
+\begin{equation*}
+    \phi^{n+1}_k = \phi^n_k - \Delta t \left( \frac{Q_{k+1/2}^n - Q_{k-1/2}^n}{h} \right),
+\end{equation*}
+где значения потока \( Q \) на границах интервала \( \omega_k \) аппроксимируются как:
+\begin{equation*}
+    Q_{k+1/2}^n \approx \frac{Q_{k+1}^n + Q_k^n}{2}, \quad Q_{k-1/2}^n \approx \frac{Q_k^n + Q_{k-1}^n}{2}.
+\end{equation*}
+
+Поток на границах области $\Omega$ аппроксимируется в соответствии с граничными условиями:
+\begin{enumerate}
+    \item периодические граничные условия:
+    \begin{equation*}
+        Q_{1/2}^n \approx \frac{Q_{N}^n + Q_1^n}{2}, \quad Q_{N+1/2}^n \approx \frac{Q_{N}^n + Q_{1}^n}{2};
+    \end{equation*}
+    \item фиксированные граничные условия:
+    \begin{equation*}
+        Q_{1/2}^n = 0, \quad Q_{N+1/2}^n = 0.
+    \end{equation*}
+\end{enumerate}
+
+Свободную энергию системы, соответствующую временному слою $n$, будем аппрокисимировать следующим образом:
+
+\begin{equation*} 
+\Psi^n = \sum\limits^{N}_{k=1} \left[ \frac{\alpha}{2}(\phi_k^n)^2 + \frac{\beta}{2}(\nabla \phi_k^n)^2 + \frac{\gamma}{2}(\Delta \phi_k^n)^2 +  \epsilon {\phi_k^n} ({(\phi_k^n)}^2 - 1)) \right] h.
+\end{equation*}
+
+Устойчивое численное решение характеризуется монотонным уменьшением свободной энергии системы. В ходе моделирования мы будем строить графики, отображающие изменение свободной энергии в процессе эволюции, чтобы подтвердить корректность численного решения.
+
+Приведённая разностная схема является простейшей явной схемой решения уравнения~({\ref{evolution_eq}}). 
+%Она является условно устойчивой с ограничением на шаг по времени \mbox{$\Delta t \sim (\Delta x)^6$}.

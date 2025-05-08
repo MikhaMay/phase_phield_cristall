@@ -1,0 +1,34 @@
+\newpage
+\begin{thebibliography}{99}
+\bibitem{LQChen}
+L. Q. Chen,
+``Phase-field models for microstructure evolution,''
+\textit{Annual Review of Materials Research}, vol. 32, pages 113–140, 2002, DOI: 10.1146/annurev.matsci.32.112001.132041.
+
+\bibitem{elder2004}
+K. R. Elder and Martin Grant,
+``Modeling elastic and plastic deformations in nonequilibrium processing using phase field crystals,''
+\textit{Physical Review E}, vol. 70, 051605, November 19, 2004, DOI: 10.1103/PhysRevE.70.051605.
+
+\bibitem{zhuang2021}
+Debbie Zhuang,
+``A 1-D Phase Field Crystal Model for Li-ion Battery Intercalation with Lattice Volume Changes,''
+\textit{Department of Chemical Engineering, Massachusetts Institute of Technology},
+May 21, 2021.
+
+\bibitem{elder2002}
+K. R. Elder, Mark Katakowski, Mikko Haataja, and Martin Grant,
+``Modeling Elasticity in Crystal Growth,''
+\textit{Physical Review Letters}, vol. 88, no. 24, June 17, 2002, DOI: 10.1103/PhysRevLett.88.245701.
+
+\bibitem{elsey2012}
+Matt Elsey and Benedikt Wirth,
+``A simple and efficient scheme for phase field crystal simulation,''
+\textit{Journal of Computational Physics}, vol. 231, no. 9, pages 3645–3663, April 2012, DOI: 10.1016/j.jcp.2011.12.033.
+
+\bibitem{moats2018}
+Kyle Andrew Moats,
+``The Development of a Numerical Solver for the Phase Field Crystal Model with Select Applications to Materials Science,''
+\textit{University of Memphis Digital Commons, Electronic Theses and Dissertations},
+April 19, 2018.
+\end{thebibliography}

@@ -1,0 +1,426 @@
+%
+% preprint.tex
+%
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage[14pt]{extsizes}
+
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{amsthm}
+\usepackage{cmap}
+\usepackage{rotating}
+\usepackage{framed}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[pdftex,unicode]{hyperref}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=3cm,bindingoffset=0cm]{geometry}
+\usepackage{indentfirst}
+
+\usepackage{subcaption}
+
+\usepackage{todonotes}
+
+\usepackage{ccaption}
+% заменяем для рисунков ‘:’ после номера рисунка на ‘.’
+\captiondelim{. }
+\usepackage[labelsep=period]{caption}
+
+\usepackage{mdframed}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Показать метки
+% \usepackage{showkeys}[draft]
+%\usepackage{showkeys}[final]
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\newcommand{\te}{\text{E}}
+\newcommand{\txtr}{\text{r}}
+\newcommand{\tj}{\text{J}}
+\newcommand{\tem}{\text{EM}}
+\newcommand{\tint}{\text{INT}}
+
+
+
+
+
+% ---
+% Commands and operators
+\newcommand{\tpr}{\boldsymbol{\otimes}}   % tensor product
+\newcommand{\dpr}{\boldsymbol{\cdot}}     % dot product
+\newcommand{\cpr}{\boldsymbol{\times}}    % cross product
+\newcommand{\sm}{\boldsymbol{:}}          % оператор свертки TODO: Сделать его оператором!
+
+
+\newcommand{\tn}[1]{\boldsymbol{#1}}      % bold for tensor values
+\newcommand{\vc}[1]{\boldsymbol{#1}}      % bold for vector values
+
+\newcommand{\rclr}[1]{{\color{red} #1}}
+\newcommand{\tnt}{{\tn{T}}}      % bold for tensor T
+
+\newcommand{\vcx}{{\vc{x}}}      % bold for vector x
+\newcommand{\vcn}{{\vc{n}}}      % bold for vector n
+\newcommand{\vce}{{\vc{e}}}      % bold for vector e
+
+\newcommand{\vct}{{\vc{t}}}      % bold for vector t
+\newcommand{\vcu}{{\vc{u}}}      % bold for vector u
+\newcommand{\vcv}{{\vc{v}}}      % bold for vector u
+\newcommand{\vcw}{{\vc{w}}}      % bold for vector u
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commands
+\newcommand{\mcS}{{\mathcal{S}}}
+\newcommand{\mcF}{{\mathcal{F}}}
+\newcommand{\pmcF}{{\partial\mathcal{F}}}
+\newcommand{\mcI}{{\mathcal{I}}}
+
+\newcommand{\mc}[1]{{\mathcal{#1}}}
+
+
+
+\DeclareMathOperator{\codim} {codim}
+\DeclareMathOperator{\dist}{{dist}}
+\DeclareMathOperator{\argmin}{{arg\,min}}
+\DeclareMathOperator{\sgnd}{{sign\,dist}}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\dv}{div}
+\DeclareMathOperator{\grd}{grad}
+\DeclareMathOperator{\supp}{{supp}}
+
+\newcommand{\dhudhx}[2]{\frac{\partial_h{#1}}{\partial_h{#2}}}
+
+\newcommand{\dudx}[2]{\frac{\partial{#1}}{\partial{#2}}}
+\newcommand{\dudxf}[2]{\frac{d{#1}}{d{#2}}}
+\newcommand{\ddudx}[2]{\cfrac{\partial^2{#1}}{\partial{#2}^2}}
+\newcommand{\ddudxy}[3]{\cfrac{\partial^2{#1}}{\partial{#2}\partial{#3}}}
+\newcommand{\dvv}[1]{\dv\left(#1\right)}
+%\newcommand{\grad}[1]{\grd\left(#1\right)}
+\newcommand{\grad}[1]{\nabla\left(#1\right)}
+
+\newcommand{\sqr}[1]{\left(#1\right)^{\!2}}
+
+\def\onedot{$\mathsurround0pt\ldotp$}
+\def\cddot{% two dots stacked vertically
+  \mathbin{\vcenter{\baselineskip.67ex
+      \hbox{\onedot}\hbox{\onedot}}%
+        }}%
+
+%\newcommand{\vec}[1]{\mathbf #1}
+
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+
+\newcommand{\mmm}{\text{м}$^3$}
+
+\newcommand{\unitPa}{\text{Па}}
+\newcommand{\unitSec}{\text{с}}
+\newcommand{\unitM}{\text{м}}
+\newcommand{\unitKg}{\text{кг}}
+\newcommand{\unitK}{\text{К}}
+\newcommand{\unitJ}{\text{Дж}}
+\newcommand{\unitMole}{\text{моль}}
+\newcommand{\unitDarcy}{\text{Дарси}}
+
+% Жирное начертание для некоторых латинских букв в формулах
+% Жирным начертанием обозначаются вектора
+\newcommand{\bX}{ {\boldsymbol{x}}  }
+\newcommand{\bx}{ {\boldsymbol{x}}  }
+\newcommand{\bM}{ {\boldsymbol{M}}  }
+\newcommand{\bF}{ {\boldsymbol{F}}  }
+\newcommand{\bJ}{ {\boldsymbol{J}}  }
+\newcommand{\prt}{ {\partial}  }
+
+% Безразмерные величины -- величины с тильдами
+\newcommand{\rtd}{\widetilde{\rho}}
+\newcommand{\ptd}{\widetilde{p}}
+\newcommand{\etd}{\widetilde{e}}
+\newcommand{\Etd}{\widetilde{E}}
+\newcommand{\Htd}{\widetilde{H}}
+\newcommand{\ttd}{\widetilde{t}}
+\newcommand{\xtd}{\widetilde{x}}
+\newcommand{\ytd}{\widetilde{y}}
+\newcommand{\qtd}{\widetilde{\bf q}}
+\newcommand{\utd}{\widetilde{\bf u}}
+\newcommand{\nablatd}{\widetilde{\nabla}}
+\newcommand{\dvtd}{\widetilde{\dv}}
+\newcommand{\jtd}{\widetilde{\bf j}_m}
+\newcommand{\Ptd}{\widetilde{\Pi}}
+\newcommand{\wtd}{\widetilde{\bf w}}
+\newcommand{\wctd}{\widetilde{\bf w}_c}
+\newcommand{\Ttd}{\widetilde{T}}
+\newcommand{\atd}{\widetilde{a}}
+\newcommand{\tautd}{\widetilde{\tau}}
+
+\newcommand{\Ma}{\text{Ma}}
+\newcommand{\Sc}{\text{Sc}}
+\renewcommand{\Re}{\text{Re}}
+\renewcommand{\Pr}{\text{Pr}}
+\newcommand{\Fr}{\text{Fr}}
+\newcommand{\Pe}{\text{Pe}}
+\newcommand{\St}{\text{St}}
+
+\newcommand{\half}{\frac{1}{2}}
+%\newcommand{\dudhx}[1]{\frac{#1_{i+\half,j} - #1_{i-\half,j}}{h}}
+%\newcommand{\dudhy}[1]{\frac{#1_{i,j+\half} - #1_{i,j-\half}}{h}}
+\newcommand{\dudhx}[1]{D^h_x{#1}_{i,j}}
+\newcommand{\dudhy}[1]{D^h_y{#1}_{i,j}}
+\newcommand{\dudht}[1]{\frac{\widehat{#1}_{i,j} - #1_{i,j}}{\Delta t}}
+
+\newcommand{\const}{{\text{const}}}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{codecolor}{gray}{0.9}
+
+\renewcommand\lstlistingname{Листинг}
+
+\lstset{frame=tb,
+ %  backgroundcolor=\color{codegray},
+    frame = single,
+    language=[5.0]Lua,
+    aboveskip=1mm,
+    belowskip=1mm,
+    showstringspaces=false,
+ %  columns=fullflexible,
+    captionpos=b,
+    basicstyle={\footnotesize\ttfamily\singlespacing\setstretch{0.75}},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{red},
+    stringstyle=\color{mauve},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=3
+}
+
+\usepackage{amsthm}
+
+\theoremstyle{plain}
+\newtheorem{lem}{Лемма}
+\newtheorem{state}{Утверждение}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Замечание}
+\usepackage{float}
+
+\usepackage{setspace}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Горизонтальная линия--разделитель
+\newcommand*\sepline{%
+  \begin{center}
+    \rule[1ex]{0.5\linewidth}{1pt}
+  \end{center}
+}
+
+% % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Каллиграфические шрифты в формулах с поддержкой строчных букв
+% %\usepackage{bickham}
+% %\usepackage{boondox-cal}
+% % \usepackage{boondox-calo}
+% \usepackage{dutchcal}
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\floatstyle{ruled}
+%\newfloat{program}{thp}{lop}
+%\floatname{program}{Program}
+
+%\providecommand*{\listingautorefname}{List}
+%\def\listingautorefname{Табл.}
+%\addto\captionsrussian{\renewcommand{\listingautorefname}{Фиг.}}
+
+%\bibliographystyle{unsrt}
+% \usepackage[backend=biber, 
+%             sorting=none, 
+%             firstinits=true,
+%             doi=false,
+%             style=numeric-comp,
+%             babel=other]{biblatex}
+
+
+% % Убрать <<in:>> перед названием журнала
+% \renewbibmacro{in:}{} % E.S.: for details see
+%                       % http://tex.stackexchange.com/questions/10682/suppress-in-biblatex
+
+
+% % Убрать  <<and>> перед последним автором в библиграфии и тектосвых ссылках
+% \renewcommand*{\finalnamedelim}{\addcomma\space}
+
+% % Локализация biblatex --- том и номер журнала
+% \DefineBibliographyStrings{russian}{%
+%       jourvol   = { }
+%     , volume    = { }
+%     , volumes   = { }
+%     , edition   = { }
+%     , andothers = {и др.}
+% }
+
+% \DefineBibliographyStrings{english}{%
+%       jourvol   = { }
+%     , volume    = { }
+%     , volumes   = { }
+%     , edition   = { }
+%     , andothers = {et al.}
+% }
+
+\newcommand*{\No}{\textnumero}
+
+% % Запятая между томом и номером
+% \DeclareFieldFormat[article]{volume}{\bibstring{volume}\addnbspace #1}
+% \DeclareFieldFormat[article]{number}{\bibstring{number}\addnbspace #1}
+% \DeclareFieldFormat[article]{citetitle}{#1}
+% \DeclareFieldFormat[article]{title}{#1}
+% \AtEveryBibitem{\clearfield{month}} % clears month
+% \AtEveryCitekey{\clearfield{month}}
+% \DeclareFieldFormat{journaltitle}{\!/\!/\,#1}
+% \DeclareFieldFormat[article]{date}{#1}
+% \DeclareFieldFormat[article]{pages}{#1}
+% %\DeclareFieldFormat[article]{number}{\No #1}
+% %\DeclareFieldFormat[article]{title}{#1}
+
+% %\renewbibmacro*{volume+number+eid}{%
+% %  \printfield{volume}%
+% %  \setunit{\addcomma\space}%<---- was \setunit*{\adddot}%
+% %  \printfield{number}%
+% %  \setunit{\addcomma\space}%
+% %  \printfield{eid}}
+% %
+% %% Запятая перед томом и после названия
+% %% Взято из standard.bbx
+% %\renewbibmacro*{journal+issuetitle}{%
+% %  \usebibmacro{journal}%
+% %  \setunit*{\addcomma\addspace}%
+% %  \iffieldundef{series}
+% %    {}
+% %    {\newunit
+% %     \printfield{series}%
+% %     \setunit{\addspace}}%
+% %  \usebibmacro{volume+number+eid}%
+% %  \setunit{\space}% 
+% %  \usebibmacro{issue+date}%
+% %  \setunit{\addcolon\space}%
+% %  \usebibmacro{issue}%
+% %  \newunit}
+
+
+% % Не печатаем язык в библиографии
+% \AtEveryBibitem{\clearlist{language}} % clears language
+
+% % Непосредственно файл с библиографией
+% \addbibresource{../../biblio.bib}
+
+
+\newcommand{\code}[1]{\colorbox{codecolor}{\texttt{#1}}}
+
+
+\newcommand{\PreprintTitle}{
+  Численные исследования одномерной модели кристалла фазового поля
+}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sloppy
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{titlepage}
+
+\begin{center}
+РОССИЙСКАЯ АКАДЕМИЯ НАУК \\
+ОРДЕНА ЛЕНИНА \\
+ИНСТИТУТ ПРИКЛАДНОЙ МАТЕМАТИКИ \\
+имени М. В. КЕЛДЫША
+
+\vspace*{60mm}
+
+\Large{М.Е.~Майфет, Т.Г.~Еленина, Е.Б.~Савенков}
+
+\vspace*{20mm}
+
+\textbf{\large \PreprintTitle}
+
+
+\vspace*{110mm}
+
+\Large{Москва, 2025}
+
+\vspace*{-50mm}
+
+\end{center}
+
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setcounter{page}{2}
+
+\thispagestyle{empty}
+
+\noindent\emph{М.Е.~Майфет, Т.Г.~Еленина, Е.Б.~Савенков}, 
+\PreprintTitle
+
+\vspace*{3mm}
+
+
+\noindent\textbf{Аннотация}\\
+{\small
+  В работе рассматривается моделирование одномерных кристаллических структур с использованием метода фазового поля. Одномерные кристаллические решётки представляют собой системы, позволяющие исследовать фундаментальные аспекты кристаллообразования и динамики фазовых переходов.
+  Ключевой задачей моделирования является анализ устойчивости и динамики изменения фазовых состояний, что включает в себя решение уравнения эволюции фазового поля и исследование зависимости свойств системы от параметров модели.\\[3mm]
+%
+  \noindent
+  \textbf{Ключевые слова:}
+  фазовое поле, параметр порядка, кристалл, фазовый переход\\[5mm]
+} % \small
+% 
+\noindent\emph{M.E.~Maifet, T.G. Elenina, E.B.~Savenkov},
+Numerical studies of the one dimensional model of a phase field crystal\\[3mm]
+%
+\noindent\textbf{Abstract}\\
+%
+{\small
+  The paper considers modeling of one-dimensional crystal structures using the phase field method. One-dimensional crystal lattices are systems that allow us to study the fundamental aspects of crystal formation and the dynamics of phase transitions.
+  The key task of modeling is to analyze the stability and dynamics of changes in phase states, which includes solving the equation of phase field evolution and studying the dependence of system properties on model parameters.\\[3mm]
+%
+\textbf{Key words and phrases:} 
+phase field, order parameter, crystal, phase transition.\\[3mm]
+%
+} % \small
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\label{sec:intro}
+\input{introduction.tex}
+\input{mathematical_model.tex}
+\input{difference_scheme.tex}
+\input{simulation_results.tex}
+\input{conclusion.tex}
+
+
+\clearpage
+\input{references.tex}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\tableofcontents
+
+\end{document}
+
+% EOF
+
