@@ -53,7 +53,7 @@ namespace SimParams {
         const std::string initialConditionFile = inputDir + "initial_condition.bin";
 
         // Data files with descriptive names
-        inline std::string getDataFilePath(int step) {
+        inline std::string getDataFilePath(unsigned long step) {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/" + std::to_string(step) + ".bin";
         }
