@@ -114,7 +114,7 @@ for frame in range(frames):
     # Energy plot
     ax1.plot(energies[:frame+1], 'r-')
     ax1.set_xlim(0, frames-1)
-    ax1.set_ylim(0, 30)
+    ax1.set_ylim(0, 100)
     ax1.set_title('Energy')
     ax1.set_xlabel('Frame')
     ax1.set_ylabel('Energy')
