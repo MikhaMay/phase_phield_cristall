@@ -1,13 +1,17 @@
-import argparse
-import datetime
 import os
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+import imageio.v2 as imageio
 import matplotlib.pyplot as plt
 import numpy as np
 import yaml
 from matplotlib import cm
+
+
+LABELSIZE = 18
+FONTSIZE = 24
 
 
 @dataclass
@@ -84,10 +88,12 @@ def process_simulation_data(simulation_dir_path, selected_frames):
     # Создаем сетку для отображения
     x = np.linspace(0, params.domain_length_x, params.grid_size_x)
     y = np.linspace(0, params.domain_length_y, params.grid_size_y)
+    times = []
     X, Y = np.meshgrid(x, y)
     
     # Обрабатываем все фреймы для расчета баланса фазы
     for frame in range(frames):
+        times.append(frame * params.output_interval * params.time_step)
         data_file = simulation_dir / f'{frame * params.output_interval}.bin'
         
         # Если файл не существует, пропускаем
@@ -110,24 +116,40 @@ def process_simulation_data(simulation_dir_path, selected_frames):
             # Создаем и сохраняем визуализацию фазы
             plt.figure(figsize=(10, 8))
             im = plt.pcolormesh(X, Y, phi.T, cmap=cm.coolwarm, vmin=-1.0, vmax=1.0, shading='gouraud')
-            plt.colorbar(im, label='φ value')
-            plt.title(f'Phase Field (φ) - Frame {frame} - Time {frame * params.output_interval * params.time_step:.2f}')
-            plt.xlabel('x')
-            plt.ylabel('y')
+
+            cbar = plt.colorbar(im)
+            cbar.ax.tick_params(labelsize=LABELSIZE)  # Размер чисел на шкале
+            cbar.set_label('φ value', fontsize=FONTSIZE)  # Размер надписи colorbar
+            plt.xlabel('x', fontsize=FONTSIZE)
+            plt.ylabel('y', fontsize=FONTSIZE)
+            plt.xticks(fontsize=LABELSIZE)
+            plt.yticks(fontsize=LABELSIZE)
             plt.axis('equal')
             plt.tight_layout()
-            plt.savefig(output_dir / f'phase_frame_{frame:04d}.png', dpi=150)
+            filename = output_dir / f'phase_frame_{frame:04d}.png'
+            # plt.savefig(output_dir / f'phase_frame_{frame:04d}.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
+            plt.savefig(filename, dpi=300)
             plt.close()
             
             print(f'Saved phase visualization for frame {frame}')
-    
+
+            with imageio.get_writer(f'{str(filename)}.gif', mode='I', fps=1) as writer:
+                image = imageio.imread(filename)
+                writer.append_data(image)
+
+            subprocess.run(['convert', f'{str(filename)}.gif', str(output_dir/f'frame_{frame}.png')])
+            subprocess.run(['rm', f'{str(filename)}.gif'])
+            print(f'converted {frame}')
+
     # Создаем и сохраняем график энергии
-    plt.figure(figsize=(12, 6))
-    plt.plot(energies, 'r-')
-    plt.title('Energy Plot')
-    plt.xlabel('Frame')
-    plt.ylabel('Energy')
-    plt.grid(True)
+    plt.figure(figsize=(8, 6))
+    plt.plot(times, energies, 'r-')
+    plt.xlim(times[0], times[-1])
+    plt.ylim(0, 20)
+    plt.xticks(fontsize=LABELSIZE)
+    plt.yticks(fontsize=LABELSIZE)
+    plt.xlabel('Время', fontsize=FONTSIZE)
+    plt.ylabel('Свободная энергия', fontsize=FONTSIZE)
     plt.tight_layout()
     plt.savefig(output_dir / 'energy_plot.png', dpi=150)
     plt.close()
@@ -135,13 +157,14 @@ def process_simulation_data(simulation_dir_path, selected_frames):
     print('Saved energy plot')
     
     # Создаем и сохраняем график баланса фазы
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(8, 6))
     plt.ylim(-0.7, 0.1)
-    plt.plot(phi_balance, 'b-')
-    plt.title('Phase Balance - avg(phi)')
-    plt.xlabel('Frame')
-    plt.ylabel('Average φ')
-    plt.grid(True)
+    plt.plot(times, phi_balance, 'r-')
+    plt.xlim(times[0], times[-1])
+    plt.xticks(fontsize=LABELSIZE)
+    plt.yticks(fontsize=LABELSIZE)
+    plt.xlabel('Время', fontsize=FONTSIZE)
+    plt.ylabel('Общая фазовая концентрация', fontsize=FONTSIZE)
     plt.tight_layout()
     plt.savefig(output_dir / 'phase_balance_plot.png', dpi=150)
     plt.close()

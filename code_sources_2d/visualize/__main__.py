@@ -9,8 +9,8 @@ import yaml
 from matplotlib import cm
 
 
-CUSTOM_RUN_DIR = None
-# Path('calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_random_-0.3avg')
+CUSTOM_RUN_DIR = Path('calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_random_-0.3avg')
+# 'calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_random_-0.3avg'
 
 
 @dataclass
@@ -112,20 +112,18 @@ for frame in range(frames):
     ax3 = plt.subplot2grid((2, 2), (0, 1), rowspan=2)
 
     # Energy plot
-    ax1.plot(energies[:frame+1], 'r-')
+    ax1.plot(energies, 'r-')
     ax1.set_xlim(0, frames-1)
-    ax1.set_ylim(0, 100)
-    ax1.set_title('Energy')
-    ax1.set_xlabel('Frame')
-    ax1.set_ylabel('Energy')
+    ax1.set_ylim(0, 20)
+    ax1.set_xlabel('Время')
+    ax1.set_ylabel('Свободная энергия')
 
     # Phase balance plot
     ax2.plot(phi_balance, 'r-')
     ax2.set_xlim(0, frames-1)
     ax2.set_ylim(-0.7, 0.1)
-    ax2.set_title('Phase Balance - avg(phi)')
-    ax2.set_xlabel('Frame')
-    ax2.set_ylabel('Average φ')
+    ax2.set_xlabel('Время')
+    ax2.set_ylabel('Общая фазовая концентрация')
 
     # 2D phase plot with interpolation - use one of the following options:
     
