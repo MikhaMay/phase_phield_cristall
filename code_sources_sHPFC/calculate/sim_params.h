@@ -19,9 +19,16 @@ namespace SimParams {
     constexpr int outputInterval = 10'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
+    
+    // Model parameters
+    constexpr double r = -0.4;  // параметр из уравнения свободной энергии
+    constexpr double Gamma = 1.0;  // подвижность
+    constexpr double Gamma_S = 0.001;  // параметр диссипации скорости
+    constexpr double rho_0 = 0.001;  // плотность
+    constexpr double a_0 = 6.0;  // постоянная кристаллической решетки
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "from_random";
+    const std::string simulationTag = "sHPFC";
 
     // File paths
     namespace Paths {
@@ -34,7 +41,7 @@ namespace SimParams {
             std::ostringstream prefix;
             prefix << "L" << std::fixed << std::setprecision(1) << domainLength
                    << "_N" << gridSize
-                   << "_eps" << std::setprecision(2) << epsilon
+                   << "_r" << std::setprecision(2) << r
                    << "_dt" << std::scientific << std::setprecision(1) << timeStep
                    << "_" << SimParams::boundaryType
                    << "_" << simulationTag;
@@ -51,6 +58,12 @@ namespace SimParams {
         inline std::string getDataFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/" + std::to_string(step) + ".bin";
+        }
+
+        // Velocity data files with descriptive names
+        inline std::string getVelocityFilePath(int step) {
+            std::string prefix = getDescriptivePrefix();
+            return outputDir + prefix + "/v_" + std::to_string(step) + ".bin";
         }
 
         // Energy data file with descriptive name
@@ -77,7 +90,11 @@ namespace SimParams {
         paramsFile << "timeStep: " << SimParams::timeStep << std::endl;
         paramsFile << "timeSteps: " << SimParams::timeSteps << std::endl;
         paramsFile << "outputInterval: " << SimParams::outputInterval << std::endl;
-        paramsFile << "epsilon: " << SimParams::epsilon << std::endl;
+        paramsFile << "r: " << SimParams::r << std::endl;
+        paramsFile << "Gamma: " << SimParams::Gamma << std::endl;
+        paramsFile << "Gamma_S: " << SimParams::Gamma_S << std::endl;
+        paramsFile << "rho_0: " << SimParams::rho_0 << std::endl;
+        paramsFile << "a_0: " << SimParams::a_0 << std::endl;
         paramsFile << "boundaryType: " << SimParams::boundaryType << std::endl;
         paramsFile << "simulationTag: " << SimParams::simulationTag << std::endl;
 

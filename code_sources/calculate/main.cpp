@@ -23,9 +23,9 @@ int main() {
     phi.setRandomInitialCondition(-0.2, 0.2);
     // phi.loadInitialConditionWithOffset(0.45, SimParams::Paths::initialConditionFile);
 
+    double hSquared = SimParams::gridSpacing * SimParams::gridSpacing;
     // Основной цикл по времени
     for (int step = 0; step <= SimParams::timeSteps; ++step) {
-        double hSquared = SimParams::gridSpacing * SimParams::gridSpacing;
 
         // Первый промежуточный шаг - вычисление eta
         for (int i = 0; i < SimParams::gridSize; ++i) {

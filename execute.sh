@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Определение переменной пути
-SOURCE_PATH="code_sources_2d"
+SOURCE_PATH="code_sources_sHPFC"
 
 # Компиляция
 g++-14 \

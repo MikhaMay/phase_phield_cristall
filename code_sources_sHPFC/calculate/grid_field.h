@@ -42,6 +42,23 @@ private:
         return values_[i];
     }
 
+    // Templated accessor methods for different boundary types (const version)
+    template <BoundaryType T = BType>
+    typename std::enable_if<T == BoundaryType::Periodic, const double&>::type
+    accessWithBoundary(int i) const {
+        if (i == -1) return values_[size_ - 1];
+        if (i == size_) return values_[0];
+        return values_[i];
+    }
+
+    template <BoundaryType T = BType>
+    typename std::enable_if<T == BoundaryType::Fix, const double&>::type
+    accessWithBoundary(int i) const {
+        if (i == -1) return leftBoundary_;
+        if (i == size_) return rightBoundary_;
+        return values_[i];
+    }
+
 public:
     GridField() = default;
     
@@ -85,8 +102,8 @@ public:
     }
 
     // Accessor methods
-    int size() const { return size_; }
-    
+    const int& size() const { return size_; }
+
     // Bracket operator using template specialization
     inline double& operator[] (int i) {
         if (i >= 0 && i < size_) {
@@ -95,9 +112,24 @@ public:
         return accessWithBoundary<BType>(i);
     }
 
-    inline double laplacian(int i, double hSquared) {
+    inline const double& operator[] (int i) const {
+        if (i >= 0 && i < size_) {
+            return values_[i];
+        }
+        return accessWithBoundary<BType>(i);
+    }
+
+    inline double laplacian(int i, double hSquared) const {
         return ((*this)[i-1] - 2 * (*this)[i] + (*this)[i+1]) / hSquared;
-    }    
+    }
+
+    inline double nabla(int i, double h, bool forward = true) const {
+        if (forward) {
+            return ((*this)[i+1] - (*this)[i]) / h;
+        } else {
+            return ((*this)[i] - (*this)[i-1]) / h;
+        }
+    }
 
     void swap(GridField& other) {
         std::swap(size_, other.size_);
@@ -112,7 +144,7 @@ public:
     void setLinearInitialCondition();
     void setStepInitialCondition();
     void loadInitialConditionWithOffset(const double& offsetValue, const std::string& filePath);
-    
+
     // Методы, требующие параметры сетки, передадим их как аргументы
     void setSinusoidalInitialCondition(double waveNumber, double amplitude, double gridSpacing, double phase = 0.0);
     void setBookInitialCondition(double domainLength, double gridSpacing);

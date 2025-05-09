@@ -15,7 +15,7 @@ CUSTOM_RUN_DIR = None
 class Parameters:
     time_steps: int
     output_interval: int
-    epsilon: float
+    # epsilon: float
     grid_size: float
     domain_length: float
     grid_spacing: float
@@ -27,7 +27,7 @@ class Parameters:
         return cls(
             time_steps = params['timeSteps'],
             output_interval = params['outputInterval'],
-            epsilon = params['epsilon'],
+            # epsilon = params['epsilon'],
             grid_size = params['gridSize'],
             domain_length = params['domainLength'],
             grid_spacing = params['gridSpacing'],
