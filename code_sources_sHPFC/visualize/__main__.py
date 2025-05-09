@@ -119,10 +119,9 @@ for frame in range(frames):
     axs[2].set_xlabel('x')
 
     # График поля скорости
-    axs[3].plot(x_space, velocity, 'g-')
-    v_max = max(abs(np.max(velocity)), abs(np.min(velocity)))
+    axs[3].plot(x_space, velocity, 'r-')
     axs[3].set_xlim(0, params.domain_length)
-    axs[3].set_ylim(-v_max*1.1, v_max*1.1)
+    axs[3].set_ylim(-3, 3)
     axs[3].set_title('Поле скорости')
     axs[3].set_xlabel('x')
 
