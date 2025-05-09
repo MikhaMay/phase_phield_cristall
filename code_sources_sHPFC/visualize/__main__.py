@@ -93,12 +93,14 @@ for frame in range(frames):
     if len(energies) > 0:
         axs[0].set_ylim(min(energies)*0.9, max(energies)*1.1)
     axs[0].set_title(f'Энергия')
+    axs[0].set_xlabel('t')
 
     # График баланса фазы
     axs[1].plot(phi_balance, 'r-')
     axs[1].set_xlim(0, frames-1)
     axs[1].set_ylim(-0.5, 0.5)
     axs[1].set_title('Баланс фазы - avg(phi)')
+    axs[1].set_xlabel('t')
 
     # График phi
     x_space = np.linspace(0, params.domain_length, N)
@@ -114,7 +116,8 @@ for frame in range(frames):
     axs[2].set_xlim(0, params.domain_length)
     axs[2].set_ylim(-1.2, 1.2)
     axs[2].set_title('Фаза')
-    
+    axs[2].set_xlabel('x')
+
     # График поля скорости
     axs[3].plot(x_space, velocity, 'g-')
     v_max = max(abs(np.max(velocity)), abs(np.min(velocity)))
