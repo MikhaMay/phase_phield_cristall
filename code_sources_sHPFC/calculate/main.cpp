@@ -120,8 +120,11 @@ int main() {
     GridField<SimParams::boundaryType> energies((SimParams::timeSteps / SimParams::outputInterval) + 1, 0.0, 0.0);
 
     // Установка начальных условий
-    phi.setRandomInitialCondition(-0.2, 0.2);
-    v.setRandomInitialCondition(-0.01, 0.01);  // Начальное поле скоростей
+    // phi.setRandomInitialCondition(-0.2, 0.2);
+    // v.setRandomInitialCondition(-0.01, 0.01);  // Начальное поле скоростей
+
+    phi.loadInitialCondition(SimParams::Paths::initialConditionFile);
+    v.setRandomInitialCondition(0.0, 0.0);
 
     double h = SimParams::gridSpacing;
     double hSquared = h * h;
@@ -163,7 +166,7 @@ int main() {
         if (step % SimParams::outputInterval == 0) {
             // Проверка значений на корректность
             phi.validateValues(10.0);
-            v.validateValues(10.0);
+            // v.validateValues(10.0);
 
             // Вычисление энергии для текущего шага
             double energy = 0.0;

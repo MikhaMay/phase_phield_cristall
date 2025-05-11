@@ -10,16 +10,16 @@
 
 namespace SimParams {
     // Simulation parameters
-    constexpr double domainLength = 40.0;
+    constexpr double domainLength = 80.0;
     constexpr int gridSize = 100;
     constexpr double gridSpacing = domainLength / gridSize;
     constexpr double timeStep = 1e-4;
-    constexpr int timeSteps = 10'000'000;
+    constexpr int timeSteps = 1'000'000;
     // constexpr double epsilon = 0.4;
-    constexpr int outputInterval = 100'000;
+    constexpr int outputInterval = 10'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
-    
+
     // Model parameters
     constexpr double r = -0.4;  // параметр из уравнения свободной энергии
     constexpr double Gamma = 1.0;  // подвижность
@@ -28,7 +28,7 @@ namespace SimParams {
     constexpr double a_0 = 6.0;  // постоянная кристаллической решетки
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC";
+    const std::string simulationTag = "sHPFC_no_velocity";
 
     // File paths
     namespace Paths {

@@ -38,13 +38,17 @@ run_id = latest_run_dir.name
 params = Parameters.from_file(latest_run_dir / 'params.yaml')
 
 
-# Чтение энергий
-energy_file = os.path.join(latest_run_dir, 'energies.bin')
-with open(energy_file, 'rb') as file:
-    N = np.fromfile(file, dtype=np.int32, count=1)[0]
-    energies = np.fromfile(file, dtype=np.float64, count=N)
+try:
+    # Чтение энергий
+    energy_file = os.path.join(latest_run_dir, 'energies.bin')
+    with open(energy_file, 'rb') as file:
+        N = np.fromfile(file, dtype=np.int32, count=1)[0]
+        energies = np.fromfile(file, dtype=np.float64, count=N)
 
-print(f'Loaded {len(energies)} energy values')
+    print(f'Loaded {len(energies)} energy values')
+except FileNotFoundError as e:
+    energies = []
+    print(str(e))
 
 x_extrems = []
 y_extrems = []
@@ -121,7 +125,7 @@ for frame in range(frames):
     # График поля скорости
     axs[3].plot(x_space, velocity, 'r-')
     axs[3].set_xlim(0, params.domain_length)
-    axs[3].set_ylim(-3, 3)
+    axs[3].set_ylim(-3, 10)
     axs[3].set_title('Поле скорости')
     axs[3].set_xlabel('x')
 
@@ -132,7 +136,7 @@ for frame in range(frames):
     plt.close(fig)
     filenames.append(filename)
 
-    print(f'Processed frame {frame+1}/{frames} ({int(frame/frames*100)}%)')
+    print(f'Processed frame {frame+1}/{frames} ({int(frame/frames*100)}%)\t{filename}')
     x_extrems = []
     y_extrems = []
 

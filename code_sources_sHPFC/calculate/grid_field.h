@@ -144,6 +144,7 @@ public:
     void setLinearInitialCondition();
     void setStepInitialCondition();
     void loadInitialConditionWithOffset(const double& offsetValue, const std::string& filePath);
+    void loadInitialCondition(const std::string& filePath);
 
     // Методы, требующие параметры сетки, передадим их как аргументы
     void setSinusoidalInitialCondition(double waveNumber, double amplitude, double gridSpacing, double phase = 0.0);

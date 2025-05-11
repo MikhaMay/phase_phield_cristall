@@ -106,6 +106,30 @@ void GridField<BType>::loadInitialConditionWithOffset(const double& offsetValue,
 }
 
 template <BoundaryType BType>
+void GridField<BType>::loadInitialCondition(const std::string& filePath) {
+    std::ifstream file(filePath, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("Failed to open initial condition file: " + filePath);
+    }
+
+    int tmpSize;
+    file.read(reinterpret_cast<char*>(&tmpSize), sizeof(tmpSize));
+    if (file.fail()) {
+        throw std::runtime_error("Failed to read size from initial condition file");
+    }
+
+    std::vector<double> tempData(tmpSize);
+    file.read(reinterpret_cast<char*>(tempData.data()), tmpSize * sizeof(double));
+    if (file.fail()) {
+        throw std::runtime_error("Failed to read data from initial condition file");
+    }
+
+    for (int i = 0; i < size_; ++i) {
+        values_[i] = tempData[i];
+    }
+}
+
+template <BoundaryType BType>
 void GridField<BType>::setSinusoidalInitialCondition(double waveNumber, double amplitude, double gridSpacing, double phase) {
     double currentPhase = phase;
     for (int i = 0; i < size_; ++i) {
