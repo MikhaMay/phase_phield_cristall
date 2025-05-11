@@ -1,0 +1,13 @@
+Source directory: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9
+Run ID: Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9
+Parameters: 
+  time_step: 1e-08
+  time_steps: 5000000000
+  output_interval: 50000000
+  epsilon: 0.4
+  grid_size_x: 64
+  grid_size_y: 64
+  domain_length_x: 20
+  domain_length_y: 20
+  grid_spacing_x: 0.3125
+  grid_spacing_y: 0.3125

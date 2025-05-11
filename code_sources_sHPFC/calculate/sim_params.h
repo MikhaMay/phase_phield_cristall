@@ -10,13 +10,13 @@
 
 namespace SimParams {
     // Simulation parameters
-    constexpr double domainLength = 80.0;
-    constexpr int gridSize = 200;
+    constexpr double domainLength = 40.0;
+    constexpr int gridSize = 100;
     constexpr double gridSpacing = domainLength / gridSize;
     constexpr double timeStep = 1e-4;
-    constexpr int timeSteps = 1'000'000;
-    constexpr double epsilon = 0.4;
-    constexpr int outputInterval = 10'000;
+    constexpr int timeSteps = 10'000'000;
+    // constexpr double epsilon = 0.4;
+    constexpr int outputInterval = 100'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
     

@@ -21,7 +21,7 @@ num_max = 2**32
 # print(result)
 
 # Путь к директории
-directory_path = 'calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_-0.9'
+directory_path = 'calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_random_-0.3avg'
 
 numbers = []
 # Проход по всем файлам в директории
