@@ -1,0 +1,9 @@
+Source directory: calculate_output_data/L80.0_N100_r-0.40_dt1.0e-04_Periodic_sHPFC_no_velocity
+Run ID: L80.0_N100_r-0.40_dt1.0e-04_Periodic_sHPFC_no_velocity
+Parameters: 
+  time_step: 0.0001
+  time_steps: 1000000
+  output_interval: 10000
+  grid_size: 100
+  domain_length: 80
+  grid_spacing: 0.8

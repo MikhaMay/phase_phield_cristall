@@ -186,6 +186,8 @@ int main() {
             // Сохранение текущего состояния
             phi.saveToFile(SimParams::Paths::getDataFilePath(step));
             v.saveToFile(SimParams::Paths::getVelocityFilePath(step));
+            tmp.saveToFile(SimParams::Paths::getTmpFilePath(step));
+            mu.saveToFile(SimParams::Paths::getMuFilePath(step));
 
             // Отображение прогресса
             double progressPercent = 100.0 * step / SimParams::timeSteps;
@@ -200,6 +202,7 @@ int main() {
     // Сохранение итоговых данных энергии
     std::string energyFilePath = SimParams::Paths::getEnergiesFile();
     energies.saveToFile(energyFilePath);
+    std::cout << energies.size() << "energy values" << std::endl;
     std::cout << "Energy data saved to: " << energyFilePath << std::endl;
 
     return 0;

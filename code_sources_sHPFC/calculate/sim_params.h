@@ -28,7 +28,7 @@ namespace SimParams {
     constexpr double a_0 = 6.0;  // постоянная кристаллической решетки
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC_no_velocity";
+    const std::string simulationTag = "sHPFC_0_boundary_velocity";
 
     // File paths
     namespace Paths {
@@ -64,6 +64,16 @@ namespace SimParams {
         inline std::string getVelocityFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/v_" + std::to_string(step) + ".bin";
+        }
+
+        inline std::string getTmpFilePath(int step) {
+            std::string prefix = getDescriptivePrefix();
+            return outputDir + prefix + "/tmp_" + std::to_string(step) + ".bin";
+        }
+
+        inline std::string getMuFilePath(int step) {
+            std::string prefix = getDescriptivePrefix();
+            return outputDir + prefix + "/mu_" + std::to_string(step) + ".bin";
         }
 
         // Energy data file with descriptive name

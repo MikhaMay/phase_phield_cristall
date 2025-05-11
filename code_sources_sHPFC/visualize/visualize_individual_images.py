@@ -11,6 +11,7 @@ import yaml
 
 LABELSIZE = 18
 FONTSIZE = 24
+TAG = 'mu_'
 
 @dataclass
 class Parameters:
@@ -62,8 +63,7 @@ def process_simulation_data(simulation_dir_path, selected_frames):
     try:
         with open(energy_file, 'rb') as file:
             N = np.fromfile(file, dtype=np.int32, count=1)[0]
-            M = np.fromfile(file, dtype=np.int32, count=1)[0]
-            energies = np.fromfile(file, dtype=np.float64, count=N*M)
+            energies = np.fromfile(file, dtype=np.float64, count=N)
     except FileNotFoundError as e:
         print(e)
         energies = []
@@ -72,6 +72,7 @@ def process_simulation_data(simulation_dir_path, selected_frames):
 
     # Вычисляем общее количество фреймов
     frames = (params.time_steps // params.output_interval) + 1
+    print(frames)
 
     # Создаем массив для хранения баланса фазы
     phi_balance = []
@@ -83,11 +84,7 @@ def process_simulation_data(simulation_dir_path, selected_frames):
     # Обрабатываем все фреймы для расчета баланса фазы
     for frame in range(frames):
         times.append(frame * params.output_interval * params.time_step)
-        data_file = simulation_dir / f'v_{frame * params.output_interval}.bin'
-
-        # Если файл не существует, пропускаем
-        if not data_file.exists():
-            continue
+        data_file = simulation_dir / f'{TAG}{frame * params.output_interval}.bin'
 
         with open(data_file, 'rb') as file:
             nx = np.fromfile(file, dtype=np.int32, count=1)[0]
@@ -99,31 +96,32 @@ def process_simulation_data(simulation_dir_path, selected_frames):
         # Рассчитываем средний баланс фазы
         phi_balance.append(np.mean(phi))
 
-        # Если этот фрейм в списке выбранных, создаем визуализацию
-        if frame in selected_frames:
-            # Создаем и сохраняем визуализацию фазы
-            plt.figure(figsize=(10, 8))
-            plt.plot(x, phi, 'r-')
-            plt.xlabel('x', fontsize=FONTSIZE)
-            plt.ylabel('φ value', fontsize=FONTSIZE)
-            plt.ylim(-4.0, 4.0)
-            plt.xlim(0.0, 80.0)
-            plt.xticks(fontsize=LABELSIZE)
-            plt.yticks(fontsize=LABELSIZE)
-            plt.tight_layout()
-            filename = output_dir / f'phase_frame_{frame:04d}.png'
-            plt.savefig(filename, dpi=300)
-            plt.close()
+        # Если этот фрейм не в списке выбранных, пропускаем визуализацию
+        if frame not in selected_frames:
+            continue
+        # Создаем и сохраняем визуализацию фазы
+        plt.figure(figsize=(10, 8))
+        plt.plot(x, phi, 'r-')
+        plt.xlabel('x', fontsize=FONTSIZE)
+        plt.ylabel('φ value', fontsize=FONTSIZE)
+        plt.ylim(-4.0, 4.0)
+        plt.xlim(0.0, 80.0)
+        plt.xticks(fontsize=LABELSIZE)
+        plt.yticks(fontsize=LABELSIZE)
+        plt.tight_layout()
+        filename = output_dir / f'{TAG}phase_frame_{frame:04d}.png'
+        plt.savefig(filename, dpi=300)
+        plt.close()
 
-            print(f'Saved phase visualization for frame {frame}')
+        print(f'Saved phase visualization for frame {frame}')
 
-            with imageio.get_writer(f'{str(filename)}.gif', mode='I', fps=1) as writer:
-                image = imageio.imread(filename)
-                writer.append_data(image)
+        with imageio.get_writer(f'{str(filename)}.gif', mode='I', fps=1) as writer:
+            image = imageio.imread(filename)
+            writer.append_data(image)
 
-            subprocess.run(['convert', f'{str(filename)}.gif', str(output_dir/f'frame_{frame}.png')])
-            subprocess.run(['rm', f'{str(filename)}.gif'])
-            print(f'converted {frame}')
+        subprocess.run(['convert', f'{str(filename)}.gif', str(output_dir/f'frame_{frame}.png')])
+        subprocess.run(['rm', f'{str(filename)}.gif'])
+        print(f'converted {frame}')
 
     # Создаем и сохраняем график энергии
     plt.figure(figsize=(8, 6))
@@ -157,5 +155,5 @@ def process_simulation_data(simulation_dir_path, selected_frames):
 
     print(f'All visualizations saved to {output_dir}')
 
-simulation_dir = 'calculate_output_data/L80.0_N200_r-0.40_dt1.0e-04_Periodic_sHPFC/'
-process_simulation_data(simulation_dir, selected_frames=[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+simulation_dir = 'calculate_output_data/L80.0_N100_r-0.40_dt1.0e-04_Periodic_sHPFC_no_velocity'
+process_simulation_data(simulation_dir, selected_frames=[0])
