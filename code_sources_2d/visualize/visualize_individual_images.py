@@ -174,5 +174,5 @@ def process_simulation_data(simulation_dir_path, selected_frames):
     print(f'All visualizations saved to {output_dir}')
 
 
-simulation_dir = 'calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_-0.9'
+simulation_dir = 'calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9'
 process_simulation_data(simulation_dir, selected_frames=[0,10,100])
