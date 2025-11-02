@@ -18,7 +18,6 @@ void calculateLaplacian(
         phiLaplacian[i] = phi.laplacian(i, hSquared);
 }
 
-
 template <BoundaryType BType>
 void calculateChemicalPotential(
     const GridField<BType>& phi,
@@ -29,180 +28,224 @@ void calculateChemicalPotential(
 ) {
     // μ = (1 + Δ)²φ + φ³ + rφ = φ + 2Δφ + Δ²φ + φ³ + rφ
     for (int i = 0; i < phi.size(); ++i)
-        mu[i] = phi[i] + 2 * phiLaplacian[i] + phiLaplacian.laplacian(i, hSquared) + phi[i] * phi[i] * phi[i] + r * phi[i];
+        mu[i] = phi[i]
+              + 2.0 * phiLaplacian[i]
+              + phiLaplacian.laplacian(i, hSquared)
+              + phi[i] * phi[i] * phi[i]
+              + r * phi[i];
 }
 
 
+// φ_{k+1/2} = (φ_k + φ_{k+1}) / 2
 template <BoundaryType BType>
-void calculateAB(
-    const GridField<BType>& phiLaplacian,
-    GridField<BType>& A,
-    GridField<BType>& B,
-    double hSquared
+void calculateHalfAverages(
+    const GridField<BType>& phi,
+    GridField<BType>& phiHalf
 ) {
-    for (int i = 0; i < phiLaplacian.size(); ++i) {
-        // B = Δφ
-        B[i] = phiLaplacian[i];
-
-        // A = 4Δφ + Δ²φ
-        A[i] = 4 * phiLaplacian[i] + phiLaplacian.laplacian(i, hSquared);
+    for (int k = 0; k < phi.size(); ++k) {
+        phiHalf[k] = 0.5 * (phi[k] + phi[k+1]);
     }
 }
 
-// Локальное tmp
+// (∇φ)_k = (φ_{k+1/2} - φ_{k-1/2}) / h
 template <BoundaryType BType>
-void calculateTmp(
-    const GridField<BType>& A,
-    const GridField<BType>& B,
-    const GridField<BType>& phi,
-    GridField<BType>& tmp,
+void calculateGradientFromHalfAtNodes(
+    const GridField<BType>& phiHalf,
+    GridField<BType>& gradPhi,
     double h
 ) {
-    for (int i = 0; i < phi.size(); ++i) {
-        // A * nabla(phi)
-        double A_term = 0.0;
-        if (A[i] > 0)
-            A_term = A[i] * phi.nabla(i, h, false);
-        else
-            A_term = A[i] * phi.nabla(i, h, true);
+    for (int k = 0; k < phiHalf.size(); ++k) {
+        gradPhi[k] = (phiHalf[k] - phiHalf[k-1]) / h;
+    }
+}
 
-        // B * nabla(B)
-        double B_term = 0.0;
-        if (B[i] > 0)
-            B_term = B[i] * B.nabla(i, h, false);
-        else
-            B_term = B[i] * B.nabla(i, h, true);
+// (Δφ)_{k+1/2} = (φ_{k+3/2} - 2φ_{k+1/2} + φ_{k-1/2}) / h^2
+// Реализуем как лапласиан на "полуцелой" сетке
+template <BoundaryType BType>
+void calculateLaplacianOnHalf(
+    const GridField<BType>& phiHalf,
+    GridField<BType>& deltaPhiHalf,
+    double hSquared
+) {
+    for (int k = 0; k < phiHalf.size(); ++k) {
+        deltaPhiHalf[k] = (phiHalf[k+1] - 2.0 * phiHalf[k] + phiHalf[k-1]) / hSquared;
+    }
+}
 
-        // Итоговое значение tmp
-        tmp[i] = A_term - B_term;
+// (∇Δφ)_k = ((Δφ)_{k+1/2} - (Δφ)_{k-1/2}) / h
+template <BoundaryType BType>
+void calculateGradLaplacianFromHalfAtNodes(
+    const GridField<BType>& deltaPhiHalf,
+    GridField<BType>& gradDeltaPhi,
+    double h
+) {
+    for (int k = 0; k < deltaPhiHalf.size(); ++k) {
+        gradDeltaPhi[k] = (deltaPhiHalf[k] - deltaPhiHalf[k-1]) / h;
+    }
+}
+
+// ξ = μ ∇φ - [ (r+2)φ ∇φ - 2(Δφ) ∇φ + (Δφ) (∇Δφ) + (φ² - 1)φ ∇φ ]
+template <BoundaryType BType>
+void calculateXiAtNodes(
+    const GridField<BType>& mu,              // μ at nodes
+    const GridField<BType>& phi,             // φ at nodes
+    const GridField<BType>& lapPhiNode,      // Δφ at nodes
+    const GridField<BType>& gradPhiNode,     // ∇φ at nodes (через полуцелые)
+    const GridField<BType>& gradDeltaPhiNode,// ∇Δφ at nodes (через полуцелые)
+    GridField<BType>& xi,                    // result
+    double r
+) {
+    for (int k = 0; k < phi.size(); ++k) {
+        double phi_k = phi[k];
+        double mu_k = mu[k];
+        double grad_phi_k = gradPhiNode[k];
+        double lap_phi_k  = lapPhiNode[k];
+        double grad_lap_phi_k = gradDeltaPhiNode[k];
+
+        double bracket =
+            (r + 2.0) * phi_k * grad_phi_k
+            - 2.0 * lap_phi_k * grad_phi_k
+            + lap_phi_k * grad_lap_phi_k
+            + (phi_k * phi_k - 1.0) * phi_k * grad_phi_k;
+
+        xi[k] = mu_k * grad_phi_k - bracket;
     }
 }
 
 // Гауссовское сглаживание (coarse graining)
 template <BoundaryType BType>
 void applyCoarseGraining(
-    const GridField<BType>& tmp,
-    GridField<BType>& coarseTmp,
+    const GridField<BType>& inField,
+    GridField<BType>& outField,
     double h,
     double a0
 ) {
-    const double norm_factor = 1.0 / (std::sqrt(2.0 * M_PI * a0 * a0));
+    const double norm_factor = 1.0 / (std::sqrt(2.0 * M_PI) * a0);
 
-    for (int k = 0; k < tmp.size(); ++k) {
+    for (int k = 0; k < inField.size(); ++k) {
         double sum = 0.0;
-
-        // Применяем гауссово сглаживание по всем точкам
-        for (int j = 0; j < tmp.size(); ++j) {
+        for (int j = 0; j < inField.size(); ++j) {
             double dist = (k - j) * h;
             double gauss = norm_factor * std::exp(-(dist * dist) / (2.0 * a0 * a0));
-            sum += tmp[j] * gauss * h;
+            sum += inField[j] * gauss * h;
         }
-
-        coarseTmp[k] = sum;
+        outField[k] = sum;
     }
 }
 
 int main() {
     SimParams::writeParameters();
 
-    // Создание сеточных полей
+    // Поля на узлах
     GridField<SimParams::boundaryType> phi(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> phiNext(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> phiLaplacian(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> phiLaplacianNext(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> mu(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> muNext(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> v(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> vNext(SimParams::gridSize, 0.0, 0.0);
-    GridField<SimParams::boundaryType> A(SimParams::gridSize, 0.0, 0.0);
-    GridField<SimParams::boundaryType> B(SimParams::gridSize, 0.0, 0.0);
-    GridField<SimParams::boundaryType> tmp(SimParams::gridSize, 0.0, 0.0);
-    GridField<SimParams::boundaryType> coarseTmp(SimParams::gridSize, 0.0, 0.0);
+
+    // Поля на полуцелых индексах (размер такой же, индексы понимаем как k+1/2)
+    GridField<SimParams::boundaryType> phiHalf(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> deltaPhiHalf(SimParams::gridSize, 0.0, 0.0);
+
+    // Производные в узлах, построенные через полуцелые
+    GridField<SimParams::boundaryType> gradPhiNode(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> gradDeltaPhiNode(SimParams::gridSize, 0.0, 0.0);
+
+    // ξ и его сглаженная версия
+    GridField<SimParams::boundaryType> xi(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> coarseXi(SimParams::gridSize, 0.0, 0.0);
+
+    // Энергия
     GridField<SimParams::boundaryType> energies((SimParams::timeSteps / SimParams::outputInterval) + 1, 0.0, 0.0);
 
-    // Установка начальных условий
-    // phi.setRandomInitialCondition(-0.2, 0.2);
-    // v.setRandomInitialCondition(-0.01, 0.01);  // Начальное поле скоростей
-
+    // Начальные условия
     phi.loadInitialCondition(SimParams::Paths::initialConditionFile);
-    v.setRandomInitialCondition(0.0, 0.0);
+    v.setRandomInitialCondition(0.0, 0.0); // нулевая скорость
 
-    double h = SimParams::gridSpacing;
-    double hSquared = h * h;
-    double dt = SimParams::timeStep;
+    const double h = SimParams::gridSpacing;
+    const double hSquared = h * h;
+    const double dt = SimParams::timeStep;
 
-    // Основной цикл по времени
     for (int step = 0; step <= SimParams::timeSteps; ++step) {
+        // Текущие Δφ и μ
         calculateLaplacian(phi, phiLaplacian, hSquared);
-        // Вычисление химического потенциала
         calculateChemicalPotential(phi, phiLaplacian, mu, hSquared, SimParams::r);
 
-        // Вычисление phi на следующем временном шаге
+        // Шаг по φ (явный, перенос upwind)
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            // Конвективный член с upwind схемой
             double convection_term = 0.0;
-            if (v[i] > 0)
-                convection_term = v[i] * phi.nabla(i, h, false);
+            if (v[i] > 0.0)
+                convection_term = v[i] * phi.nabla(i, h, false); // (φ_i - φ_{i-1})/h
             else
-                convection_term = v[i] * phi.nabla(i, h, true);
+                convection_term = v[i] * phi.nabla(i, h, true);  // (φ_{i+1} - φ_i)/h
 
-            // Обновление phi
             phiNext[i] = phi[i] + dt * (SimParams::Gamma * mu.laplacian(i, hSquared) - convection_term);
         }
 
-
+        // Поля для n+1
         calculateLaplacian(phiNext, phiLaplacianNext, hSquared);
-        // Расчет параметров A и B
-        calculateAB(phiLaplacianNext, A, B, hSquared);
-        // Расчет локального tmp
-        calculateTmp(A, B, phiNext, tmp, h);
-        // Применение гауссовского сглаживания
-        applyCoarseGraining(tmp, coarseTmp, h, SimParams::a_0);
-        // Обновление скорости
+        calculateChemicalPotential(phiNext, phiLaplacianNext, muNext, hSquared, SimParams::r);
+
+        // Полуцелые: φ_{k+1/2}, затем ∇φ|_k
+        calculateHalfAverages(phiNext, phiHalf);
+        calculateGradientFromHalfAtNodes(phiHalf, gradPhiNode, h);
+
+        // Δφ на полуцелых и затем ∇Δφ|_k
+        calculateLaplacianOnHalf(phiHalf, deltaPhiHalf, hSquared);
+        calculateGradLaplacianFromHalfAtNodes(deltaPhiHalf, gradDeltaPhiNode, h);
+
+        // ξ^{n+1} в узлах
+        calculateXiAtNodes(muNext, phiNext, phiLaplacianNext, gradPhiNode, gradDeltaPhiNode, xi, SimParams::r);
+
+        // Гауссово усреднение ξ^{n+1}
+        applyCoarseGraining(xi, coarseXi, h, SimParams::a_0);
+
+        // Обновление v: v^{n+1} = v^n + dt/rho0 * ( <ξ^{n+1}> + Γ_S Δ v^n )
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            vNext[i] = v[i] + dt * (coarseTmp[i] + SimParams::Gamma_S * v.laplacian(i, hSquared)) / SimParams::rho_0;
+            vNext[i] = v[i] + dt * (coarseXi[i] + SimParams::Gamma_S * v.laplacian(i, hSquared)) / SimParams::rho_0;
         }
 
-        // Обработка и сохранение результатов с заданной периодичностью
+        // Вывод/энергия
         if (step % SimParams::outputInterval == 0) {
-            // Проверка значений на корректность
             phi.validateValues(10.0);
-            // v.validateValues(10.0);
 
-            // Вычисление энергии для текущего шага
+            // Для энергии используем согласованный ∇φ через полуцелые для текущего φ
+            calculateHalfAverages(phi, phiHalf);
+            calculateGradientFromHalfAtNodes(phiHalf, gradPhiNode, h);
+
             double energy = 0.0;
             for (int i = 0; i < SimParams::gridSize; ++i) {
-                // Свободная энергия: f = (r+2)φ²/2 - (∇φ)²/2 + (Δφ)²/2 + (φ²-1)²/4
-                double grad_phi = phi.nabla(i, h);
-
-                double f = (SimParams::r + 2) * phi[i] * phi[i] / 2.0 
-                         - grad_phi * grad_phi / 2.0 
-                         + phiLaplacian[i] * phiLaplacian[i] / 2.0 
+                double grad_phi = gradPhiNode[i];
+                double f = (SimParams::r + 2.0) * phi[i] * phi[i] / 2.0
+                         - grad_phi * grad_phi
+                         + phiLaplacian[i] * phiLaplacian[i] / 2.0
                          + (phi[i] * phi[i] - 1.0) * (phi[i] * phi[i] - 1.0) / 4.0;
-
                 energy += f * h;
             }
             energies[step / SimParams::outputInterval] = energy;
 
-            // Сохранение текущего состояния
+            // Сохранение: tmp теперь — это xi (для ясности можно переименовать путь)
             phi.saveToFile(SimParams::Paths::getDataFilePath(step));
             v.saveToFile(SimParams::Paths::getVelocityFilePath(step));
-            tmp.saveToFile(SimParams::Paths::getTmpFilePath(step));
+            xi.saveToFile(SimParams::Paths::getTmpFilePath(step));
             mu.saveToFile(SimParams::Paths::getMuFilePath(step));
 
-            // Отображение прогресса
             double progressPercent = 100.0 * step / SimParams::timeSteps;
             std::cout << progressPercent << "% - saved: " << SimParams::Paths::getDataFilePath(step) << std::endl;
         }
 
-        // Обмен текущего и следующего полей
+        // swap
         swap(phi, phiNext);
         swap(v, vNext);
     }
 
-    // Сохранение итоговых данных энергии
+    // Сохранение энергий
     std::string energyFilePath = SimParams::Paths::getEnergiesFile();
     energies.saveToFile(energyFilePath);
-    std::cout << energies.size() << "energy values" << std::endl;
+    std::cout << energies.size() << " energy values" << std::endl;
     std::cout << "Energy data saved to: " << energyFilePath << std::endl;
 
     return 0;
