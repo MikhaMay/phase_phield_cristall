@@ -11,7 +11,7 @@ import yaml
 
 LABELSIZE = 18
 FONTSIZE = 24
-TAG = 'mu_'
+TAG = 'v_'
 
 @dataclass
 class Parameters:
@@ -103,7 +103,7 @@ def process_simulation_data(simulation_dir_path, selected_frames):
         plt.figure(figsize=(10, 8))
         plt.plot(x, phi, 'r-')
         plt.xlabel('x', fontsize=FONTSIZE)
-        plt.ylabel('φ value', fontsize=FONTSIZE)
+        plt.ylabel('v value', fontsize=FONTSIZE)
         plt.ylim(-4.0, 4.0)
         plt.xlim(0.0, 80.0)
         plt.xticks(fontsize=LABELSIZE)
@@ -155,5 +155,5 @@ def process_simulation_data(simulation_dir_path, selected_frames):
 
     print(f'All visualizations saved to {output_dir}')
 
-simulation_dir = 'calculate_output_data/L80.0_N100_r-0.40_dt1.0e-04_Periodic_sHPFC_no_velocity'
-process_simulation_data(simulation_dir, selected_frames=[0])
+simulation_dir = 'calculate_output_data/L80.0_N200_r-0.40_dt1.0e-04_Periodic_sHPFC'
+process_simulation_data(simulation_dir, selected_frames=[10, 30, 100])
