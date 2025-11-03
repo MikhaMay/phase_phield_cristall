@@ -1,17 +1,209 @@
 nohup: ignoring input
-0% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/0.bin
-1% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/50000000.bin
-2% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/100000000.bin
-3% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/150000000.bin
-4% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/200000000.bin
-5% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/250000000.bin
-6% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/300000000.bin
-7% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/350000000.bin
-8% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/400000000.bin
-9% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/450000000.bin
-10% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/500000000.bin
-11% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/550000000.bin
-12% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/600000000.bin
-13% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/650000000.bin
-14% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/700000000.bin
-15% - saved: calculate_output_data/Lx20.0_Ly20.0_Nx64_Ny64_eps0.40_dt1.0e-08_Periodic_2d_half_from_file_+0.9/750000000.bin
+0% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/0.bin
+1% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/5000000.bin
+2% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/10000000.bin
+3% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/15000000.bin
+4% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/20000000.bin
+5% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/25000000.bin
+6% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/30000000.bin
+7% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/35000000.bin
+8% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/40000000.bin
+9% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/45000000.bin
+10% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/50000000.bin
+11% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/55000000.bin
+12% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/60000000.bin
+13% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/65000000.bin
+14% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/70000000.bin
+15% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/75000000.bin
+16% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/80000000.bin
+17% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/85000000.bin
+18% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/90000000.bin
+19% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/95000000.bin
+20% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/100000000.bin
+21% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/105000000.bin
+22% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/110000000.bin
+23% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/115000000.bin
+24% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/120000000.bin
+25% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/125000000.bin
+26% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/130000000.bin
+27% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/135000000.bin
+28% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/140000000.bin
+29% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/145000000.bin
+30% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/150000000.bin
+31% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/155000000.bin
+32% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/160000000.bin
+33% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/165000000.bin
+34% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/170000000.bin
+35% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/175000000.bin
+36% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/180000000.bin
+37% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/185000000.bin
+38% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/190000000.bin
+39% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/195000000.bin
+40% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/200000000.bin
+41% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/205000000.bin
+42% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/210000000.bin
+43% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/215000000.bin
+44% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/220000000.bin
+45% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/225000000.bin
+46% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/230000000.bin
+47% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/235000000.bin
+48% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/240000000.bin
+49% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/245000000.bin
+50% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/250000000.bin
+51% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/255000000.bin
+52% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/260000000.bin
+53% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/265000000.bin
+54% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/270000000.bin
+55% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/275000000.bin
+56% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/280000000.bin
+57% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/285000000.bin
+58% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/290000000.bin
+59% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/295000000.bin
+60% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/300000000.bin
+61% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/305000000.bin
+62% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/310000000.bin
+63% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/315000000.bin
+64% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/320000000.bin
+65% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/325000000.bin
+66% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/330000000.bin
+67% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/335000000.bin
+68% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/340000000.bin
+69% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/345000000.bin
+70% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/350000000.bin
+71% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/355000000.bin
+72% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/360000000.bin
+73% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/365000000.bin
+74% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/370000000.bin
+75% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/375000000.bin
+76% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/380000000.bin
+77% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/385000000.bin
+78% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/390000000.bin
+79% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/395000000.bin
+80% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/400000000.bin
+81% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/405000000.bin
+82% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/410000000.bin
+83% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/415000000.bin
+84% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/420000000.bin
+85% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/425000000.bin
+86% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/430000000.bin
+87% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/435000000.bin
+88% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/440000000.bin
+89% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/445000000.bin
+90% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/450000000.bin
+91% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/455000000.bin
+92% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/460000000.bin
+93% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/465000000.bin
+94% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/470000000.bin
+95% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/475000000.bin
+96% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/480000000.bin
+97% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/485000000.bin
+98% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/490000000.bin
+99% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/495000000.bin
+100% - saved: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/500000000.bin
+101 energy values
+Energy data saved to: calculate_output_data/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity/energies.bin
+Loaded 101 energy values
+Processed frame 1/101 (0%)	vizualize_output_data/images/0.png
+Processed frame 2/101 (0%)	vizualize_output_data/images/1.png
+Processed frame 3/101 (1%)	vizualize_output_data/images/2.png
+Processed frame 4/101 (2%)	vizualize_output_data/images/3.png
+Processed frame 5/101 (3%)	vizualize_output_data/images/4.png
+Processed frame 6/101 (4%)	vizualize_output_data/images/5.png
+Processed frame 7/101 (5%)	vizualize_output_data/images/6.png
+Processed frame 8/101 (6%)	vizualize_output_data/images/7.png
+Processed frame 9/101 (7%)	vizualize_output_data/images/8.png
+Processed frame 10/101 (8%)	vizualize_output_data/images/9.png
+Processed frame 11/101 (9%)	vizualize_output_data/images/10.png
+Processed frame 12/101 (10%)	vizualize_output_data/images/11.png
+Processed frame 13/101 (11%)	vizualize_output_data/images/12.png
+Processed frame 14/101 (12%)	vizualize_output_data/images/13.png
+Processed frame 15/101 (13%)	vizualize_output_data/images/14.png
+Processed frame 16/101 (14%)	vizualize_output_data/images/15.png
+Processed frame 17/101 (15%)	vizualize_output_data/images/16.png
+Processed frame 18/101 (16%)	vizualize_output_data/images/17.png
+Processed frame 19/101 (17%)	vizualize_output_data/images/18.png
+Processed frame 20/101 (18%)	vizualize_output_data/images/19.png
+Processed frame 21/101 (19%)	vizualize_output_data/images/20.png
+Processed frame 22/101 (20%)	vizualize_output_data/images/21.png
+Processed frame 23/101 (21%)	vizualize_output_data/images/22.png
+Processed frame 24/101 (22%)	vizualize_output_data/images/23.png
+Processed frame 25/101 (23%)	vizualize_output_data/images/24.png
+Processed frame 26/101 (24%)	vizualize_output_data/images/25.png
+Processed frame 27/101 (25%)	vizualize_output_data/images/26.png
+Processed frame 28/101 (26%)	vizualize_output_data/images/27.png
+Processed frame 29/101 (27%)	vizualize_output_data/images/28.png
+Processed frame 30/101 (28%)	vizualize_output_data/images/29.png
+Processed frame 31/101 (29%)	vizualize_output_data/images/30.png
+Processed frame 32/101 (30%)	vizualize_output_data/images/31.png
+Processed frame 33/101 (31%)	vizualize_output_data/images/32.png
+Processed frame 34/101 (32%)	vizualize_output_data/images/33.png
+Processed frame 35/101 (33%)	vizualize_output_data/images/34.png
+Processed frame 36/101 (34%)	vizualize_output_data/images/35.png
+Processed frame 37/101 (35%)	vizualize_output_data/images/36.png
+Processed frame 38/101 (36%)	vizualize_output_data/images/37.png
+Processed frame 39/101 (37%)	vizualize_output_data/images/38.png
+Processed frame 40/101 (38%)	vizualize_output_data/images/39.png
+Processed frame 41/101 (39%)	vizualize_output_data/images/40.png
+Processed frame 42/101 (40%)	vizualize_output_data/images/41.png
+Processed frame 43/101 (41%)	vizualize_output_data/images/42.png
+Processed frame 44/101 (42%)	vizualize_output_data/images/43.png
+Processed frame 45/101 (43%)	vizualize_output_data/images/44.png
+Processed frame 46/101 (44%)	vizualize_output_data/images/45.png
+Processed frame 47/101 (45%)	vizualize_output_data/images/46.png
+Processed frame 48/101 (46%)	vizualize_output_data/images/47.png
+Processed frame 49/101 (47%)	vizualize_output_data/images/48.png
+Processed frame 50/101 (48%)	vizualize_output_data/images/49.png
+Processed frame 51/101 (49%)	vizualize_output_data/images/50.png
+Processed frame 52/101 (50%)	vizualize_output_data/images/51.png
+Processed frame 53/101 (51%)	vizualize_output_data/images/52.png
+Processed frame 54/101 (52%)	vizualize_output_data/images/53.png
+Processed frame 55/101 (53%)	vizualize_output_data/images/54.png
+Processed frame 56/101 (54%)	vizualize_output_data/images/55.png
+Processed frame 57/101 (55%)	vizualize_output_data/images/56.png
+Processed frame 58/101 (56%)	vizualize_output_data/images/57.png
+Processed frame 59/101 (57%)	vizualize_output_data/images/58.png
+Processed frame 60/101 (58%)	vizualize_output_data/images/59.png
+Processed frame 61/101 (59%)	vizualize_output_data/images/60.png
+Processed frame 62/101 (60%)	vizualize_output_data/images/61.png
+Processed frame 63/101 (61%)	vizualize_output_data/images/62.png
+Processed frame 64/101 (62%)	vizualize_output_data/images/63.png
+Processed frame 65/101 (63%)	vizualize_output_data/images/64.png
+Processed frame 66/101 (64%)	vizualize_output_data/images/65.png
+Processed frame 67/101 (65%)	vizualize_output_data/images/66.png
+Processed frame 68/101 (66%)	vizualize_output_data/images/67.png
+Processed frame 69/101 (67%)	vizualize_output_data/images/68.png
+Processed frame 70/101 (68%)	vizualize_output_data/images/69.png
+Processed frame 71/101 (69%)	vizualize_output_data/images/70.png
+Processed frame 72/101 (70%)	vizualize_output_data/images/71.png
+Processed frame 73/101 (71%)	vizualize_output_data/images/72.png
+Processed frame 74/101 (72%)	vizualize_output_data/images/73.png
+Processed frame 75/101 (73%)	vizualize_output_data/images/74.png
+Processed frame 76/101 (74%)	vizualize_output_data/images/75.png
+Processed frame 77/101 (75%)	vizualize_output_data/images/76.png
+Processed frame 78/101 (76%)	vizualize_output_data/images/77.png
+Processed frame 79/101 (77%)	vizualize_output_data/images/78.png
+Processed frame 80/101 (78%)	vizualize_output_data/images/79.png
+Processed frame 81/101 (79%)	vizualize_output_data/images/80.png
+Processed frame 82/101 (80%)	vizualize_output_data/images/81.png
+Processed frame 83/101 (81%)	vizualize_output_data/images/82.png
+Processed frame 84/101 (82%)	vizualize_output_data/images/83.png
+Processed frame 85/101 (83%)	vizualize_output_data/images/84.png
+Processed frame 86/101 (84%)	vizualize_output_data/images/85.png
+Processed frame 87/101 (85%)	vizualize_output_data/images/86.png
+Processed frame 88/101 (86%)	vizualize_output_data/images/87.png
+Processed frame 89/101 (87%)	vizualize_output_data/images/88.png
+Processed frame 90/101 (88%)	vizualize_output_data/images/89.png
+Processed frame 91/101 (89%)	vizualize_output_data/images/90.png
+Processed frame 92/101 (90%)	vizualize_output_data/images/91.png
+Processed frame 93/101 (91%)	vizualize_output_data/images/92.png
+Processed frame 94/101 (92%)	vizualize_output_data/images/93.png
+Processed frame 95/101 (93%)	vizualize_output_data/images/94.png
+Processed frame 96/101 (94%)	vizualize_output_data/images/95.png
+Processed frame 97/101 (95%)	vizualize_output_data/images/96.png
+Processed frame 98/101 (96%)	vizualize_output_data/images/97.png
+Processed frame 99/101 (97%)	vizualize_output_data/images/98.png
+Processed frame 100/101 (98%)	vizualize_output_data/images/99.png
+Processed frame 101/101 (99%)	vizualize_output_data/images/100.png
+Creating GIF: vizualize_output_data/gifs/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity.gif
+GIF "vizualize_output_data/gifs/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity.gif" created successfully
+Analysis saved to vizualize_output_data/images/L80.0_N100_r-0.40_dt5.0e-07_Periodic_sHPFC_0_boundary_velocity_analysis.png
