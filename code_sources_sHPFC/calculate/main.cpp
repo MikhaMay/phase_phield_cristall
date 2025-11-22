@@ -121,11 +121,21 @@ void applyCoarseGraining(
     double a0
 ) {
     const double norm_factor = 1.0 / (std::sqrt(2.0 * M_PI) * a0);
+    const int N = inField.size();
+    
+    // Определяем радиус окна сглаживания (например, 3*a0)
+    const int radius = static_cast<int>(std::ceil(3.0 * a0 / h));
 
-    for (int k = 0; k < inField.size(); ++k) {
+    for (int k = 0; k < N; ++k) {
         double sum = 0.0;
-        for (int j = 0; j < inField.size(); ++j) {
-            double dist = (k - j) * h;
+        
+        // Симметричное окно: от -radius до +radius
+        for (int offset = -radius; offset <= radius; ++offset) {
+            // Периодический индекс
+            int j = (k + offset + N) % N;
+            if (j < 0) j += N;  // дополнительная защита
+            
+            double dist = offset * h;
             double gauss = norm_factor * std::exp(-(dist * dist) / (2.0 * a0 * a0));
             sum += inField[j] * gauss * h;
         }
@@ -145,6 +155,7 @@ int main() {
     GridField<SimParams::boundaryType> muNext(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> v(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> vNext(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> vLaplacian(SimParams::gridSize, 0.0, 0.0);
 
     // Поля на полуцелых индексах (размер такой же, индексы понимаем как k+1/2)
     GridField<SimParams::boundaryType> phiHalf(SimParams::gridSize, 0.0, 0.0);
@@ -202,10 +213,11 @@ int main() {
 
         // Гауссово усреднение ξ^{n+1}
         applyCoarseGraining(xi, coarseXi, h, SimParams::a_0);
+        calculateLaplacian(v, vLaplacian, hSquared);
 
         // Обновление v: v^{n+1} = v^n + dt/rho0 * ( <ξ^{n+1}> + Γ_S Δ v^n )
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            vNext[i] = v[i] + dt * (coarseXi[i] + SimParams::Gamma_S * v.laplacian(i, hSquared)) / SimParams::rho_0;
+            vNext[i] = v[i] + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i]) / SimParams::rho_0;
         }
 
         // Вывод/энергия
@@ -218,9 +230,8 @@ int main() {
 
             double energy = 0.0;
             for (int i = 0; i < SimParams::gridSize; ++i) {
-                double grad_phi = gradPhiNode[i];
                 double f = (SimParams::r + 2.0) * phi[i] * phi[i] / 2.0
-                         - grad_phi * grad_phi
+                         - gradPhiNode[i] * gradPhiNode[i]
                          + phiLaplacian[i] * phiLaplacian[i] / 2.0
                          + (phi[i] * phi[i] - 1.0) * (phi[i] * phi[i] - 1.0) / 4.0;
                 energy += f * h;
@@ -230,7 +241,9 @@ int main() {
             // Сохранение: tmp теперь — это xi (для ясности можно переименовать путь)
             phi.saveToFile(SimParams::Paths::getDataFilePath(step));
             v.saveToFile(SimParams::Paths::getVelocityFilePath(step));
-            xi.saveToFile(SimParams::Paths::getTmpFilePath(step));
+            vLaplacian.saveToFile(SimParams::Paths::getVLaplacianFilePath(step));
+            xi.saveToFile(SimParams::Paths::getXiFilePath(step));
+            coarseXi.saveToFile(SimParams::Paths::getCoarseXiFilePath(step));
             mu.saveToFile(SimParams::Paths::getMuFilePath(step));
 
             double progressPercent = 100.0 * step / SimParams::timeSteps;

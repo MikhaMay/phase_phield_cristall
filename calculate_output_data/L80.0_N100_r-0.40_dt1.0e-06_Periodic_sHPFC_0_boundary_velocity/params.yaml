@@ -1,0 +1,13 @@
+domainLength: 80
+gridSize: 100
+gridSpacing: 0.8
+timeStep: 1e-06
+timeSteps: 50000000
+outputInterval: 500000
+r: -0.4
+Gamma: 1
+Gamma_S: 0.001
+rho_0: 0.001
+a_0: 5.71429
+boundaryType: Periodic
+simulationTag: sHPFC_0_boundary_velocity

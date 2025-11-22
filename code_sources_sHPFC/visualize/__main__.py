@@ -67,29 +67,40 @@ frames = (params.time_steps // params.output_interval) + 1
 filenames = []
 for frame in range(frames):
     data_file = os.path.join(latest_run_dir, f'{frame * params.output_interval}.bin')
-    velocity_file = os.path.join(latest_run_dir, f'v_{frame * params.output_interval}.bin')
+    xi_file = os.path.join(latest_run_dir, f'xi_{frame * params.output_interval}.bin')
+    coarse_xi_file = os.path.join(latest_run_dir, f'coarse_xi_{frame * params.output_interval}.bin')
+    v_file = os.path.join(latest_run_dir, f'v_{frame * params.output_interval}.bin')
+    vlap_file = os.path.join(latest_run_dir, f'vlap_{frame * params.output_interval}.bin')
 
     # Чтение поля фазы
     with open(data_file, 'rb') as file:
         N = np.fromfile(file, dtype=np.int32, count=1)[0]
         phi = np.fromfile(file, dtype=np.float64, count=N)
     
-    # Чтение поля скорости
-    with open(velocity_file, 'rb') as file:
-        N_vel = np.fromfile(file, dtype=np.int32, count=1)[0]
-        velocity = np.fromfile(file, dtype=np.float64, count=N_vel)
-    
+    # Чтение полей xi, coarse_xi, v
+    with open(xi_file, 'rb') as file:
+        N_xi = np.fromfile(file, dtype=np.int32, count=1)[0]
+        xi = np.fromfile(file, dtype=np.float64, count=N_xi)
+    with open(coarse_xi_file, 'rb') as file:
+        N_coarse_xi = np.fromfile(file, dtype=np.int32, count=1)[0]
+        coarse_xi = np.fromfile(file, dtype=np.float64, count=N_coarse_xi)
+    with open(v_file, 'rb') as file:
+        N_v = np.fromfile(file, dtype=np.int32, count=1)[0]
+        v = np.fromfile(file, dtype=np.float64, count=N_v)
+    with open(vlap_file, 'rb') as file:
+        N_vlap = np.fromfile(file, dtype=np.int32, count=1)[0]
+        vlap = np.fromfile(file, dtype=np.float64, count=N_vlap)
+
     phi_balance.append(np.average(phi))
-    velocity_balance.append(np.average(velocity))
-    
+
     # Поиск экстремумов
     for i in range(1, N-1):
         if phi[i] > max(phi[i-1], phi[i+1]):
             x_extrems.append(i)
             y_extrems.append(phi[i])
 
-    # Создаем фигуру с четырьмя подграфиками
-    fig, axs = plt.subplots(4, 1, figsize=(10, 16))
+    # Создаем фигуру с 7 подграфиками
+    fig, axs = plt.subplots(7, 1, figsize=(10, 16))
 
     # График энергии
     axs[0].plot(energies[:frame+1], 'r-')
@@ -122,12 +133,33 @@ for frame in range(frames):
     axs[2].set_title('Фаза')
     axs[2].set_xlabel('x')
 
-    # График поля скорости
-    axs[3].plot(x_space, velocity, 'r-')
+    # График поля xi
+    axs[3].plot(x_space, xi, 'r-')
     axs[3].set_xlim(0, params.domain_length)
     axs[3].set_ylim(-3, 10)
-    axs[3].set_title('Поле скорости')
+    axs[3].set_title('Поле xi')
     axs[3].set_xlabel('x')
+
+    # График поля coarse_xi
+    axs[4].plot(x_space, coarse_xi, 'r-')
+    axs[4].set_xlim(0, params.domain_length)
+    axs[4].set_ylim(-0.2, 0.2)
+    axs[4].set_title('Поле coarse_xi')
+    axs[4].set_xlabel('x')
+
+    # График поля v
+    axs[5].plot(x_space, v, 'r-')
+    axs[5].set_xlim(0, params.domain_length)
+    axs[5].set_ylim(-3, 10)
+    axs[5].set_title('Поле скорости')
+    axs[5].set_xlabel('x')
+
+    # График поля лапласиана v
+    axs[6].plot(x_space, vlap, 'r-')
+    axs[6].set_xlim(0, params.domain_length)
+    axs[6].set_ylim(-3, 10)
+    axs[6].set_title('Поле лапласиана скорости')
+    axs[6].set_xlabel('x')
 
     # Сохранение изображения
     filename = images_dir / f'{frame}.png'
@@ -151,32 +183,32 @@ with imageio.get_writer(gif_path, mode='I', fps=10) as writer:
         writer.append_data(image)
 print(f'GIF "{gif_path}" created successfully')
 
-# Создание финального графика с анализом
-plt.figure(figsize=(12, 8))
+# # Создание финального графика с анализом
+# plt.figure(figsize=(12, 8))
 
-# График для баланса скорости
-plt.subplot(2, 1, 1)
-plt.plot(velocity_balance, 'g-')
-plt.title('Эволюция среднего поля скорости')
-plt.xlabel('Шаг симуляции')
-plt.ylabel('Среднее значение v')
-plt.grid(True)
+# # График для баланса скорости
+# plt.subplot(2, 1, 1)
+# plt.plot(velocity_balance, 'g-')
+# plt.title('Эволюция среднего поля скорости')
+# plt.xlabel('Шаг симуляции')
+# plt.ylabel('Среднее значение v')
+# plt.grid(True)
 
-# График соотношения между балансом фазы и скорости
-plt.subplot(2, 1, 2)
-plt.scatter(phi_balance, velocity_balance, c=range(len(phi_balance)), cmap='viridis')
-plt.colorbar(label='Шаг симуляции')
-plt.title('Соотношение между балансом фазы и скорости')
-plt.xlabel('Среднее значение phi')
-plt.ylabel('Среднее значение v')
-plt.grid(True)
+# # График соотношения между балансом фазы и скорости
+# plt.subplot(2, 1, 2)
+# plt.scatter(phi_balance, velocity_balance, c=range(len(phi_balance)), cmap='viridis')
+# plt.colorbar(label='Шаг симуляции')
+# plt.title('Соотношение между балансом фазы и скорости')
+# plt.xlabel('Среднее значение phi')
+# plt.ylabel('Среднее значение v')
+# plt.grid(True)
 
-# Сохранение финального анализа
-analysis_path = images_dir / f'{run_id}_analysis.png'
-plt.tight_layout()
-plt.savefig(analysis_path)
-plt.close()
-print(f'Analysis saved to {analysis_path}')
+# # Сохранение финального анализа
+# analysis_path = images_dir / f'{run_id}_analysis.png'
+# plt.tight_layout()
+# plt.savefig(analysis_path)
+# plt.close()
+# print(f'Analysis saved to {analysis_path}')
 
 # Раскомментируйте для удаления временных файлов
 # for filename in filenames:

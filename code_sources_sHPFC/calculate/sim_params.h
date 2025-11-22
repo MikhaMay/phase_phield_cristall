@@ -14,9 +14,9 @@ namespace SimParams {
     constexpr int gridSize = 100;
     constexpr double gridSpacing = domainLength / gridSize;
     constexpr double timeStep = 1e-7;
-    constexpr int timeSteps = 500'000'000;
+    constexpr int timeSteps = 5'000'000;
     // constexpr double epsilon = 0.4;
-    constexpr int outputInterval = 5'000'000;
+    constexpr int outputInterval = 50'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
@@ -24,8 +24,8 @@ namespace SimParams {
     constexpr double r = -0.4;  // параметр из уравнения свободной энергии
     constexpr double Gamma = 1.0;  // подвижность
     constexpr double Gamma_S = 0.001;  // параметр диссипации скорости
-    constexpr double rho_0 = 0.001;  // плотность
-    constexpr double a_0 = 6.0;  // постоянная кристаллической решетки
+    constexpr double rho_0 = 1; //0.001;  // плотность
+    constexpr double a_0 = 80.0 / 14.0;  // постоянная кристаллической решетки
 
     // Custom tag for the current simulation
     const std::string simulationTag = "sHPFC_0_boundary_velocity";
@@ -66,9 +66,19 @@ namespace SimParams {
             return outputDir + prefix + "/v_" + std::to_string(step) + ".bin";
         }
 
-        inline std::string getTmpFilePath(int step) {
+        inline std::string getVLaplacianFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
-            return outputDir + prefix + "/tmp_" + std::to_string(step) + ".bin";
+            return outputDir + prefix + "/vlap_" + std::to_string(step) + ".bin";
+        }
+
+        inline std::string getXiFilePath(int step) {
+            std::string prefix = getDescriptivePrefix();
+            return outputDir + prefix + "/xi_" + std::to_string(step) + ".bin";
+        }
+
+        inline std::string getCoarseXiFilePath(int step) {
+            std::string prefix = getDescriptivePrefix();
+            return outputDir + prefix + "/coarse_xi_" + std::to_string(step) + ".bin";
         }
 
         inline std::string getMuFilePath(int step) {
