@@ -2,8 +2,8 @@ domainLength: 80
 gridSize: 100
 gridSpacing: 0.8
 timeStep: 1e-07
-timeSteps: 5000000
-outputInterval: 50000
+timeSteps: 50000000
+outputInterval: 500000
 r: -0.4
 Gamma: 1
 Gamma_S: 0.001
