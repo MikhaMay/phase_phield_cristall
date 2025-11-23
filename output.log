@@ -206,4 +206,3 @@ Processed frame 100/101 (98%)	vizualize_output_data/images/99.png
 Processed frame 101/101 (99%)	vizualize_output_data/images/100.png
 Creating GIF: vizualize_output_data/gifs/L80.0_N100_r-0.40_dt1.0e-07_Periodic_sHPFC_0_boundary_velocity.gif
 GIF "vizualize_output_data/gifs/L80.0_N100_r-0.40_dt1.0e-07_Periodic_sHPFC_0_boundary_velocity.gif" created successfully
-Analysis saved to vizualize_output_data/images/L80.0_N100_r-0.40_dt1.0e-07_Periodic_sHPFC_0_boundary_velocity_analysis.png
