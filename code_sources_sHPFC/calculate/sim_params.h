@@ -14,17 +14,17 @@ namespace SimParams {
     constexpr int gridSize = 100;
     constexpr double gridSpacing = domainLength / gridSize;
     constexpr double timeStep = 1e-7;
-    constexpr int timeSteps = 500'000'000;
+    constexpr int timeSteps = 50'000'000;
     // constexpr double epsilon = 0.4;
-    constexpr int outputInterval = 5'000'000;
+    constexpr int outputInterval = 500'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
     // Model parameters
     constexpr double r = -0.4;  // параметр из уравнения свободной энергии
     constexpr double Gamma = 1.0;  // подвижность
-    constexpr double Gamma_S = 0.001;  // параметр диссипации скорости
-    constexpr double rho_0 = 1; //0.001;  // плотность
+    constexpr double Gamma_S = 1; //0.001;  // параметр диссипации скорости
+    constexpr double rho_0 = 0.001;  // плотность
     constexpr double a_0 = 80.0 / 14.0;  // постоянная кристаллической решетки
 
     // Custom tag for the current simulation
