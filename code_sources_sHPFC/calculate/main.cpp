@@ -174,7 +174,7 @@ int main() {
 
     // Начальные условия
     phi.loadInitialCondition(SimParams::Paths::initialConditionFile);
-    v.setRandomInitialCondition(-1.0, 1.0); // постоянная скорость
+    v.setRandomInitialCondition(5.0, 5.0); // постоянная скорость
 
     const double h = SimParams::gridSpacing;
     const double hSquared = h * h;
