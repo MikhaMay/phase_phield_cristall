@@ -28,7 +28,7 @@ namespace SimParams {
     constexpr double a_0 = 80.0 / 14.0;  // постоянная кристаллической решетки
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC_velocity_1";
+    const std::string simulationTag = "sHPFC_velocity_2";
 
     // File paths
     namespace Paths {
