@@ -174,6 +174,7 @@ int main() {
 
     // Начальные условия
     phi.loadInitialCondition(SimParams::Paths::initialConditionFile);
+    for (int i = 0; i < SimParams::gridSize; ++i) phi[i] += 0.2;
     v.setRandomInitialCondition(5.0, 5.0); // постоянная скорость
 
     const double h = SimParams::gridSpacing;
@@ -185,15 +186,29 @@ int main() {
         calculateLaplacian(phi, phiLaplacian, hSquared);
         calculateChemicalPotential(phi, phiLaplacian, mu, hSquared, SimParams::r);
 
-        // Шаг по φ (явный, перенос upwind)
+        // Шаг по φ: PFC + перенос Lax–Wendroff (вместо upwind)
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            double convection_term = 0.0;
-            if (v[i] > 0.0)
-                convection_term = v[i] * phi.nabla(i, h, false); // (φ_i - φ_{i-1})/h
-            else
-                convection_term = v[i] * phi.nabla(i, h, true);  // (φ_{i+1} - φ_i)/h
+            // локальная безразмерная скорость (число Куранта)
+            double v_loc   = v[i];
+            double lambda  = v_loc * dt / h;
 
-            phiNext[i] = phi[i] + dt * (SimParams::Gamma * mu.laplacian(i, hSquared) - convection_term);
+            // схема Лакса–Вендрофа для уравнения:
+            // ∂t φ + v ∂x φ = 0
+            //
+            // φ_i^{n+1} = φ_i^n
+            //   - λ/2 (φ_{i+1}^n - φ_{i-1}^n)
+            //   + λ^2/2 (φ_{i+1}^n - 2 φ_i^n + φ_{i-1}^n)
+            //
+            // Здесь conv уже содержит полный вклад от переноса (Δφ за шаг),
+            // поэтому его НЕ нужно умножать ещё раз на dt.
+            double conv =
+                -0.5 * lambda * (phi[i+1] - phi[i-1]) +
+                 0.5 * lambda * lambda * (phi[i+1] - 2.0 * phi[i] + phi[i-1]);
+
+            // Полный шаг: PFC-часть + конвекция
+            phiNext[i] = phi[i]
+                       + dt * (SimParams::Gamma * mu.laplacian(i, hSquared))
+                       + conv;
         }
 
         // Поля для n+1
