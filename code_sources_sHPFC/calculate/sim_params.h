@@ -11,32 +11,27 @@
 namespace SimParams {
     // Simulation parameters
     constexpr double domainLength = 80.0;
-    constexpr int gridSize = 100;
-    constexpr double gridSpacing = domainLength / gridSize;
+    constexpr int gridSize = 101; // теперь считаем, что узлы включают обе границы
+    constexpr double gridSpacing = domainLength / (gridSize - 1);
     constexpr double timeStep = 1e-6;
     constexpr int timeSteps = 5'000'000;
-    // constexpr double epsilon = 0.4;
     constexpr int outputInterval = 50'000;
     constexpr double totalTime = timeStep * timeSteps;
-    constexpr BoundaryType boundaryType = BoundaryType::Periodic;
+    constexpr BoundaryType boundaryType = BoundaryType::Fix;
 
     // Model parameters
-    constexpr double r = -0.4;  // параметр из уравнения свободной энергии
-    constexpr double Gamma = 1.0;  // подвижность
-    constexpr double Gamma_S = 1; //0.001;  // параметр диссипации скорости
-    constexpr double rho_0 = 0.001;  // плотность
-    constexpr double a_0 = 80.0 / 14.0;  // постоянная кристаллической решетки
+    constexpr double r = -0.4;
+    constexpr double Gamma = 1.0;
+    constexpr double Gamma_S = 1.0;
+    constexpr double rho_0 = 0.001;
+    constexpr double a_0 = 80.0 / 14.0;
 
-    // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC_velocity_2";
+    const std::string simulationTag = "sHPFC_spring_in_jar_01";
 
-    // File paths
     namespace Paths {
-        // Base directories
         const std::string outputDir = "calculate_output_data/";
         const std::string inputDir = "calculate_input_data/";
 
-        // Generate descriptive filename prefix with parameters
         inline std::string getDescriptivePrefix() {
             std::ostringstream prefix;
             prefix << "L" << std::fixed << std::setprecision(1) << domainLength
@@ -48,19 +43,14 @@ namespace SimParams {
             return prefix.str();
         }
 
-        // Parameter file
         const std::string paramsFile = outputDir + "params.yaml";
-
-        // Initial condition file
         const std::string initialConditionFile = inputDir + "initial_condition.bin";
 
-        // Data files with descriptive names
         inline std::string getDataFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/" + std::to_string(step) + ".bin";
         }
 
-        // Velocity data files with descriptive names
         inline std::string getVelocityFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/v_" + std::to_string(step) + ".bin";
@@ -86,7 +76,6 @@ namespace SimParams {
             return outputDir + prefix + "/mu_" + std::to_string(step) + ".bin";
         }
 
-        // Energy data file with descriptive name
         inline std::string getEnergiesFile() {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/energies.bin";
@@ -97,13 +86,12 @@ namespace SimParams {
         std::string directoryName = Paths::outputDir + Paths::getDescriptivePrefix();
         std::filesystem::create_directories(directoryName);
 
-        // Write parameters to the new directory
         std::string paramsFilePath = directoryName + "/params.yaml";
         std::ofstream paramsFile(paramsFilePath);
         if (!paramsFile) {
             throw std::runtime_error("Failed to open parameters file for writing: " + paramsFilePath);
         }
-    
+
         paramsFile << "domainLength: " << SimParams::domainLength << std::endl;
         paramsFile << "gridSize: " << SimParams::gridSize << std::endl;
         paramsFile << "gridSpacing: " << SimParams::gridSpacing << std::endl;
