@@ -251,8 +251,9 @@ int main() {
 
         // Обновление v: только внутренние узлы
         for (int i = 1; i < N - 1; ++i) {
-            vNext[i] = v[i]
-                     + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i]) / SimParams::rho_0;
+        vNext[i] = v[i]
+                + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i]) / SimParams::rho_0
+                + dt * SimParams::gravityX;
         }
         enforceZeroBoundary(vNext);
 

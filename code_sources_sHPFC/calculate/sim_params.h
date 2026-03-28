@@ -14,8 +14,9 @@ namespace SimParams {
     constexpr int gridSize = 101; // теперь считаем, что узлы включают обе границы
     constexpr double gridSpacing = domainLength / (gridSize - 1);
     constexpr double timeStep = 1e-6;
-    constexpr int timeSteps = 5'000'000;
-    constexpr int outputInterval = 50'000;
+    constexpr int timeSteps = 50'000'000;
+    constexpr int outputInterval = 500'000;
+    constexpr double gravityX = -1;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Fix;
 
@@ -26,7 +27,7 @@ namespace SimParams {
     constexpr double rho_0 = 0.001;
     constexpr double a_0 = 80.0 / 14.0;
 
-    const std::string simulationTag = "sHPFC_spring_in_jar_01";
+    const std::string simulationTag = "sHPFC_spring_in_jar_02";
 
     namespace Paths {
         const std::string outputDir = "calculate_output_data/";
@@ -105,6 +106,7 @@ namespace SimParams {
         paramsFile << "a_0: " << SimParams::a_0 << std::endl;
         paramsFile << "boundaryType: " << SimParams::boundaryType << std::endl;
         paramsFile << "simulationTag: " << SimParams::simulationTag << std::endl;
+        paramsFile << "gravityX: " << SimParams::gravityX << std::endl;
 
         paramsFile.close();
         if (paramsFile.fail()) {
