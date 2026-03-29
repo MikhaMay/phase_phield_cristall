@@ -14,8 +14,8 @@ namespace SimParams {
     constexpr int gridSize = 101; // теперь считаем, что узлы включают обе границы
     constexpr double gridSpacing = domainLength / (gridSize - 1);
     constexpr double timeStep = 1e-6;
-    constexpr int timeSteps = 50'000'000;
-    constexpr int outputInterval = 500'000;
+    constexpr int timeSteps = 20'000'000;
+    constexpr int outputInterval = 200'000;
     constexpr double gravityX = -4;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Fix;
@@ -27,7 +27,7 @@ namespace SimParams {
     constexpr double rho_0 = 0.001;
     constexpr double a_0 = 80.0 / 14.0;
 
-    const std::string simulationTag = "sHPFC_spring_in_jar_03";
+    const std::string simulationTag = "sHPFC_spring_in_jar_04";
 
     namespace Paths {
         const std::string outputDir = "calculate_output_data/";

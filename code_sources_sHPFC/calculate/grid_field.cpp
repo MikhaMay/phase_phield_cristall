@@ -124,10 +124,30 @@ void GridField<BType>::loadInitialCondition(const std::string& filePath) {
         throw std::runtime_error("Failed to read data from initial condition file");
     }
 
+    constexpr double compressionFactor = 0.8;
+    double backgroundValue = 0.0;
+    const double leftCompressedBoundary = 1.0 - compressionFactor;
+
     for (int i = 0; i < size_; ++i) {
-        values_[i] = tempData[i];
+        double xNew = static_cast<double>(i) / (size_ - 1);  // [0,1]
+
+        if (xNew < leftCompressedBoundary) {
+            values_[i] = backgroundValue;
+        } else {
+            // Обратное отображение из новой координаты в старую
+            double xi = (xNew - leftCompressedBoundary) / compressionFactor; // [0,1]
+            xi = std::max(0.0, std::min(1.0, xi));
+
+            double oldPos = xi * (tmpSize - 1);
+            int j0 = static_cast<int>(std::floor(oldPos));
+            int j1 = std::min(j0 + 1, tmpSize - 1);
+            double alpha = oldPos - j0;
+
+            values_[i] = ((1.0 - alpha) * tempData[j0] + alpha * tempData[j1]) / compressionFactor;
+        }
     }
 }
+
 
 template <BoundaryType BType>
 void GridField<BType>::setSinusoidalInitialCondition(double waveNumber, double amplitude, double gridSpacing, double phase) {
