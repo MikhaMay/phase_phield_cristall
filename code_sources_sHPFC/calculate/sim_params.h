@@ -12,17 +12,13 @@
 namespace SimParams {
     // Simulation parameters
     constexpr double domainLength = 80.0;
-    constexpr int gridSize = 101; // узлы включают обе границы
-    constexpr double gridSpacing = domainLength / (gridSize - 1);
+    constexpr int gridSize = 100;
+    constexpr double gridSpacing = domainLength / gridSize;
     constexpr double timeStep = 1e-6;
-    constexpr int timeSteps = 20'000'000;
-    constexpr int outputInterval = 200'000;
-    constexpr double gravityX = -4.0;
+    constexpr int timeSteps = 2'000'000;
+    constexpr int outputInterval = 20'000;
     constexpr double totalTime = timeStep * timeSteps;
-
-    // Разные типы ГУ для скаляров и скорости
-    constexpr BoundaryType scalarBoundaryType = BoundaryType::NeumannZero;
-    constexpr BoundaryType velocityBoundaryType = BoundaryType::DirichletZero;
+    constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
     // Model parameters
     constexpr double r = -0.4;
@@ -31,8 +27,17 @@ namespace SimParams {
     constexpr double rho_0 = 0.001;
     constexpr double a_0 = 80.0 / 14.0;
 
-    const std::string simulationTag = "sHPFC_spring_in_jar_07";
+    // External forcing parameters
+    constexpr double forceAmplitude = 0.8;
+    constexpr int forceMode = 1;
+    constexpr double forceOmega = 20.0;
 
+    constexpr bool useExternalForce = true;
+
+    // Custom tag for the current simulation
+    const std::string simulationTag = "sHPFC_periodic_forced_4";
+
+    // File paths
     namespace Paths {
         const std::string outputDir = "calculate_output_data/";
         const std::string inputDir = "calculate_input_data/";
@@ -43,8 +48,10 @@ namespace SimParams {
                    << "_N" << gridSize
                    << "_r" << std::setprecision(2) << r
                    << "_dt" << std::scientific << std::setprecision(1) << timeStep
-                   << "_phiBC_" << SimParams::scalarBoundaryType
-                   << "_vBC_" << SimParams::velocityBoundaryType
+                   << "_" << SimParams::boundaryType
+                   << "_A" << std::fixed << std::setprecision(2) << forceAmplitude
+                   << "_m" << forceMode
+                   << "_w" << std::scientific << std::setprecision(1) << forceOmega
                    << "_" << simulationTag;
             return prefix.str();
         }
@@ -97,7 +104,7 @@ namespace SimParams {
         if (!paramsFile) {
             throw std::runtime_error("Failed to open parameters file for writing: " + paramsFilePath);
         }
-
+    
         paramsFile << "domainLength: " << SimParams::domainLength << std::endl;
         paramsFile << "gridSize: " << SimParams::gridSize << std::endl;
         paramsFile << "gridSpacing: " << SimParams::gridSpacing << std::endl;
@@ -109,10 +116,12 @@ namespace SimParams {
         paramsFile << "Gamma_S: " << SimParams::Gamma_S << std::endl;
         paramsFile << "rho_0: " << SimParams::rho_0 << std::endl;
         paramsFile << "a_0: " << SimParams::a_0 << std::endl;
-        paramsFile << "scalarBoundaryType: " << SimParams::scalarBoundaryType << std::endl;
-        paramsFile << "velocityBoundaryType: " << SimParams::velocityBoundaryType << std::endl;
+        paramsFile << "boundaryType: " << SimParams::boundaryType << std::endl;
+        paramsFile << "useExternalForce: " << SimParams::useExternalForce << std::endl;
+        paramsFile << "forceAmplitude: " << SimParams::forceAmplitude << std::endl;
+        paramsFile << "forceMode: " << SimParams::forceMode << std::endl;
+        paramsFile << "forceOmega: " << SimParams::forceOmega << std::endl;
         paramsFile << "simulationTag: " << SimParams::simulationTag << std::endl;
-        paramsFile << "gravityX: " << SimParams::gravityX << std::endl;
 
         paramsFile.close();
         if (paramsFile.fail()) {

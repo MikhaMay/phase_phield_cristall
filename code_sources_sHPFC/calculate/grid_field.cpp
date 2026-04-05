@@ -1,3 +1,6 @@
+#ifndef GRID_FIELD_CPP
+#define GRID_FIELD_CPP
+
 #include "grid_field.h"
 
 std::ostream& operator<<(std::ostream& os, const BoundaryType& type) {
@@ -5,11 +8,8 @@ std::ostream& operator<<(std::ostream& os, const BoundaryType& type) {
         case BoundaryType::Periodic:
             os << "Periodic";
             break;
-        case BoundaryType::DirichletZero:
-            os << "DirichletZero";
-            break;
-        case BoundaryType::NeumannZero:
-            os << "NeumannZero";
+        case BoundaryType::Fix:
+            os << "Fix";
             break;
         default:
             throw std::invalid_argument("Unknown BoundaryType value");
@@ -19,12 +19,16 @@ std::ostream& operator<<(std::ostream& os, const BoundaryType& type) {
 
 template <BoundaryType BType>
 void GridField<BType>::saveToFile(const std::string& path) {
+    // Open file for binary writing
     std::ofstream outfile(path, std::ios::binary);
     if (!outfile) {
         throw std::runtime_error("Failed to open file for writing: " + path);
     }
 
+    // Write the size of the array
     outfile.write(reinterpret_cast<const char*>(&size_), sizeof(size_));
+
+    // Write the array data
     outfile.write(reinterpret_cast<const char*>(values_), size_ * sizeof(double));
     
     outfile.close();
@@ -56,6 +60,7 @@ void GridField<BType>::setRandomInitialCondition(double minValue, double maxValu
 template <BoundaryType BType>
 void GridField<BType>::setLinearInitialCondition() {
     for (int i = 0; i < size_; ++i) {
+        // Linear initial condition from -1.0 to 1.0
         values_[i] = -1.0 + 2.0 * i / (size_ - 1.0);
     }
 }
@@ -89,10 +94,12 @@ void GridField<BType>::loadInitialConditionWithOffset(const double& offsetValue,
         throw std::runtime_error("Failed to read data from initial condition file");
     }
     
+    // Apply read data up to available size
     for (int i = 0; i < std::min(tmpSize, size_); ++i) {
         values_[i] = offsetValue + tempData[i];
     }
     
+    // Fill the rest with average value if our grid is larger
     for (int i = tmpSize; i < size_; ++i) {
         values_[i] = offsetValue;
     }
@@ -117,26 +124,8 @@ void GridField<BType>::loadInitialCondition(const std::string& filePath) {
         throw std::runtime_error("Failed to read data from initial condition file");
     }
 
-    constexpr double compressionFactor = 1.0;
-    double backgroundValue = 0.0;
-    const double leftCompressedBoundary = 1.0 - compressionFactor;
-
     for (int i = 0; i < size_; ++i) {
-        double xNew = static_cast<double>(i) / (size_ - 1);  // [0,1]
-
-        if (xNew < leftCompressedBoundary) {
-            values_[i] = backgroundValue;
-        } else {
-            double xi = (xNew - leftCompressedBoundary) / compressionFactor; // [0,1]
-            xi = std::max(0.0, std::min(1.0, xi));
-
-            double oldPos = xi * (tmpSize - 1);
-            int j0 = static_cast<int>(std::floor(oldPos));
-            int j1 = std::min(j0 + 1, tmpSize - 1);
-            double alpha = oldPos - j0;
-
-            values_[i] = ((1.0 - alpha) * tempData[j0] + alpha * tempData[j1]) / compressionFactor;
-        }
+        values_[i] = tempData[i];
     }
 }
 
@@ -148,6 +137,7 @@ void GridField<BType>::setSinusoidalInitialCondition(double waveNumber, double a
         currentPhase += waveNumber * gridSpacing;
     }
     
+    // Check if the condition is periodic
     double endPhase = phase + waveNumber * gridSpacing * size_;
     if (std::abs(std::sin(phase) - std::sin(endPhase)) > 1e-10) {
         throw std::runtime_error("Initial condition is not periodic");
@@ -160,17 +150,19 @@ void GridField<BType>::setBookInitialCondition(double domainLength, double gridS
     double amplitude = 0.5;
     
     for (int i = 0; i <= size_ / 2; ++i) {
-        values_[i] = phi0 + 2.0 * amplitude / domainLength * i * gridSpacing - amplitude / 2.0;
+        values_[i] = phi0 + 2 * amplitude / domainLength * i * gridSpacing - amplitude / 2;
     }
     for (int i = size_ / 2 + 1; i < size_; ++i) {
-        values_[i] = phi0 - 2.0 * amplitude / domainLength * i * gridSpacing + 3.0 * amplitude / 2.0;
+        values_[i] = phi0 - 2 * amplitude / domainLength * i * gridSpacing + 3 * amplitude / 2;
     }
 }
 
+// Явная инстанциация шаблонов для используемых типов граничных условий
 template class GridField<BoundaryType::Periodic>;
-template class GridField<BoundaryType::DirichletZero>;
-template class GridField<BoundaryType::NeumannZero>;
+template class GridField<BoundaryType::Fix>;
 
+// Также нужно явно инстанцировать функцию swap
 template void swap(GridField<BoundaryType::Periodic>& a, GridField<BoundaryType::Periodic>& b);
-template void swap(GridField<BoundaryType::DirichletZero>& a, GridField<BoundaryType::DirichletZero>& b);
-template void swap(GridField<BoundaryType::NeumannZero>& a, GridField<BoundaryType::NeumannZero>& b);
+template void swap(GridField<BoundaryType::Fix>& a, GridField<BoundaryType::Fix>& b);
+
+#endif // GRID_FIELD_CPP

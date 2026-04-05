@@ -1,1 +1,1 @@
-calculate_output_data/L80.0_N101_r-0.40_dt1.0e-06_phiBC_NeumannZero_vBC_DirichletZero_sHPFC_spring_in_jar_07
+calculate_output_data/L80.0_N100_r-0.40_dt1.0e-06_Periodic_A0.80_m1_w2.0e+01_sHPFC_periodic_forced_4

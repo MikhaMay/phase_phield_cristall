@@ -9,15 +9,10 @@
 #include <cmath>
 #include <vector>
 #include <algorithm>
-#include <type_traits>
 
 enum class BoundaryType {
     Periodic,
-    DirichletZero,
-    NeumannZero,
-
-    // обратная совместимость
-    Fix = DirichletZero,
+    Fix,
 };
 
 std::ostream& operator<<(std::ostream& os, const BoundaryType& type);
@@ -30,6 +25,7 @@ private:
     double leftBoundary_ = 0.0;
     double rightBoundary_ = 0.0;
 
+    // Templated accessor methods for different boundary types
     template <BoundaryType T = BType>
     typename std::enable_if<T == BoundaryType::Periodic, double&>::type
     accessWithBoundary(int i) {
@@ -39,23 +35,14 @@ private:
     }
 
     template <BoundaryType T = BType>
-    typename std::enable_if<T == BoundaryType::DirichletZero, double&>::type
+    typename std::enable_if<T == BoundaryType::Fix, double&>::type
     accessWithBoundary(int i) {
         if (i == -1) return leftBoundary_;
         if (i == size_) return rightBoundary_;
         return values_[i];
     }
 
-    template <BoundaryType T = BType>
-    typename std::enable_if<T == BoundaryType::NeumannZero, double&>::type
-    accessWithBoundary(int i) {
-        // Однородный Neumann на узловой сетке:
-        // u_{-1} = u_1, u_N = u_{N-2}
-        if (i == -1) return values_[1];
-        if (i == size_) return values_[size_ - 2];
-        return values_[i];
-    }
-
+    // Templated accessor methods for different boundary types (const version)
     template <BoundaryType T = BType>
     typename std::enable_if<T == BoundaryType::Periodic, const double&>::type
     accessWithBoundary(int i) const {
@@ -65,43 +52,38 @@ private:
     }
 
     template <BoundaryType T = BType>
-    typename std::enable_if<T == BoundaryType::DirichletZero, const double&>::type
+    typename std::enable_if<T == BoundaryType::Fix, const double&>::type
     accessWithBoundary(int i) const {
         if (i == -1) return leftBoundary_;
         if (i == size_) return rightBoundary_;
         return values_[i];
     }
 
-    template <BoundaryType T = BType>
-    typename std::enable_if<T == BoundaryType::NeumannZero, const double&>::type
-    accessWithBoundary(int i) const {
-        if (i == -1) return values_[1];
-        if (i == size_) return values_[size_ - 2];
-        return values_[i];
-    }
-
 public:
     GridField() = default;
     
-    GridField(int size, double leftBoundary, double rightBoundary)
-        : size_(size), leftBoundary_(leftBoundary), rightBoundary_(rightBoundary)
+    GridField(int size, double leftBoundary, double rightBoundary):
+    size_(size), leftBoundary_(leftBoundary), rightBoundary_(rightBoundary)
     {
         values_ = new double[size];
     }
 
+    // Delete copy constructor 
     GridField(const GridField&) = delete;
+
+    // Delete assignment
     GridField& operator=(const GridField&) = delete;
 
-    GridField(GridField&& other) noexcept
-        : size_(other.size_),
-          values_(other.values_),
-          leftBoundary_(other.leftBoundary_),
-          rightBoundary_(other.rightBoundary_)
+    // Add move constructor
+    GridField(GridField&& other) noexcept:
+    size_(other.size_), values_(other.values_),
+    leftBoundary_(other.leftBoundary_), rightBoundary_(other.rightBoundary_)
     {
         other.values_ = nullptr;
         other.size_ = 0;
     }
 
+    // Add move assignment
     GridField& operator=(GridField&& other) noexcept {
         if (this != &other) {
             delete[] values_;
@@ -119,16 +101,18 @@ public:
         delete[] values_;
     }
 
+    // Accessor methods
     const int& size() const { return size_; }
 
-    inline double& operator[](int i) {
+    // Bracket operator using template specialization
+    inline double& operator[] (int i) {
         if (i >= 0 && i < size_) {
             return values_[i];
         }
         return accessWithBoundary<BType>(i);
     }
 
-    inline const double& operator[](int i) const {
+    inline const double& operator[] (int i) const {
         if (i >= 0 && i < size_) {
             return values_[i];
         }
@@ -136,14 +120,14 @@ public:
     }
 
     inline double laplacian(int i, double hSquared) const {
-        return ((*this)[i - 1] - 2.0 * (*this)[i] + (*this)[i + 1]) / hSquared;
+        return ((*this)[i-1] - 2 * (*this)[i] + (*this)[i+1]) / hSquared;
     }
 
     inline double nabla(int i, double h, bool forward = true) const {
         if (forward) {
-            return ((*this)[i + 1] - (*this)[i]) / h;
+            return ((*this)[i+1] - (*this)[i]) / h;
         } else {
-            return ((*this)[i] - (*this)[i - 1]) / h;
+            return ((*this)[i] - (*this)[i-1]) / h;
         }
     }
 
@@ -162,10 +146,12 @@ public:
     void loadInitialConditionWithOffset(const double& offsetValue, const std::string& filePath);
     void loadInitialCondition(const std::string& filePath);
 
+    // Методы, требующие параметры сетки, передадим их как аргументы
     void setSinusoidalInitialCondition(double waveNumber, double amplitude, double gridSpacing, double phase = 0.0);
     void setBookInitialCondition(double domainLength, double gridSpacing);
 };
 
+// Free function for swap following STL convention
 template <BoundaryType BType>
 void swap(GridField<BType>& a, GridField<BType>& b) {
     a.swap(b);
