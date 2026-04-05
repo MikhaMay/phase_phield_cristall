@@ -7,18 +7,22 @@
 #include <iomanip>
 #include <filesystem>
 #include <stdexcept>
+#include <fstream>
 
 namespace SimParams {
     // Simulation parameters
     constexpr double domainLength = 80.0;
-    constexpr int gridSize = 101; // теперь считаем, что узлы включают обе границы
+    constexpr int gridSize = 101; // узлы включают обе границы
     constexpr double gridSpacing = domainLength / (gridSize - 1);
     constexpr double timeStep = 1e-6;
     constexpr int timeSteps = 20'000'000;
     constexpr int outputInterval = 200'000;
-    constexpr double gravityX = -4;
+    constexpr double gravityX = -4.0;
     constexpr double totalTime = timeStep * timeSteps;
-    constexpr BoundaryType boundaryType = BoundaryType::Fix;
+
+    // Разные типы ГУ для скаляров и скорости
+    constexpr BoundaryType scalarBoundaryType = BoundaryType::NeumannZero;
+    constexpr BoundaryType velocityBoundaryType = BoundaryType::DirichletZero;
 
     // Model parameters
     constexpr double r = -0.4;
@@ -27,7 +31,7 @@ namespace SimParams {
     constexpr double rho_0 = 0.001;
     constexpr double a_0 = 80.0 / 14.0;
 
-    const std::string simulationTag = "sHPFC_spring_in_jar_04";
+    const std::string simulationTag = "sHPFC_spring_in_jar_07";
 
     namespace Paths {
         const std::string outputDir = "calculate_output_data/";
@@ -39,7 +43,8 @@ namespace SimParams {
                    << "_N" << gridSize
                    << "_r" << std::setprecision(2) << r
                    << "_dt" << std::scientific << std::setprecision(1) << timeStep
-                   << "_" << SimParams::boundaryType
+                   << "_phiBC_" << SimParams::scalarBoundaryType
+                   << "_vBC_" << SimParams::velocityBoundaryType
                    << "_" << simulationTag;
             return prefix.str();
         }
@@ -83,7 +88,7 @@ namespace SimParams {
         }
     }
 
-    void writeParameters() {
+    inline void writeParameters() {
         std::string directoryName = Paths::outputDir + Paths::getDescriptivePrefix();
         std::filesystem::create_directories(directoryName);
 
@@ -104,7 +109,8 @@ namespace SimParams {
         paramsFile << "Gamma_S: " << SimParams::Gamma_S << std::endl;
         paramsFile << "rho_0: " << SimParams::rho_0 << std::endl;
         paramsFile << "a_0: " << SimParams::a_0 << std::endl;
-        paramsFile << "boundaryType: " << SimParams::boundaryType << std::endl;
+        paramsFile << "scalarBoundaryType: " << SimParams::scalarBoundaryType << std::endl;
+        paramsFile << "velocityBoundaryType: " << SimParams::velocityBoundaryType << std::endl;
         paramsFile << "simulationTag: " << SimParams::simulationTag << std::endl;
         paramsFile << "gravityX: " << SimParams::gravityX << std::endl;
 
