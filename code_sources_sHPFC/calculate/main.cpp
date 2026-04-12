@@ -149,6 +149,38 @@ inline double externalForce(double x, double t) {
     // return SimParams::forceAmplitude * std::sin(q * x) * std::cos(SimParams::forceOmega * t);
 }
 
+template <BoundaryType BType>
+void calculateExternalForceField(
+    GridField<BType>& fExtField,
+    double currentTime,
+    int step,
+    double h
+) {
+    setZeroInitialCondition(fExtField);
+
+    if (!SimParams::useExternalForce) {
+        return;
+    }
+
+    if (step >= 50000) {
+        return;
+    }
+
+    const double limit = step / 5000.0;
+
+    for (int i = 0; i < fExtField.size(); ++i) {
+        const double x = i * h;
+        const double force = externalForce(x, currentTime);
+
+        if (i < limit) {
+            fExtField[i] = force;
+        }
+        else if (i > SimParams::gridSize - 1 - limit) {
+            fExtField[i] = -force;
+        }
+    }
+}
+
 int main() {
     SimParams::writeParameters();
 
@@ -170,6 +202,7 @@ int main() {
 
     GridField<SimParams::boundaryType> xi(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> coarseXi(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> fExtField(SimParams::gridSize, 0.0, 0.0);
 
     GridField<SimParams::boundaryType> energies(
         (SimParams::timeSteps / SimParams::outputInterval) + 1, 0.0, 0.0
@@ -223,25 +256,12 @@ int main() {
 
         applyCoarseGraining(xi, coarseXi, h, SimParams::a_0);
         calculateLaplacian(v, vLaplacian, hSquared);
+        calculateExternalForceField(fExtField, currentTime, step, h);
 
         // Обновление v с внешней силой
         for (int i = 0; i < SimParams::gridSize; ++i) {
-            double x = i * h;
-
-            double fExt = 0.0;
-            if (step < 500) {
-                double limit = step / 50.0;
-                if (i < limit) {
-                    fExt = externalForce(x, currentTime);
-                }
-                if (i > SimParams::gridSize - 1 - limit) {
-                    fExt = -externalForce(x, currentTime);
-                }
-            }
-
-
             vNext[i] = v[i]
-                     + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i] + fExt)
+                     + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i] + fExtField[i])
                             / SimParams::rho_0;
         }
 
@@ -267,6 +287,7 @@ int main() {
             xi.saveToFile(SimParams::Paths::getXiFilePath(step));
             coarseXi.saveToFile(SimParams::Paths::getCoarseXiFilePath(step));
             mu.saveToFile(SimParams::Paths::getMuFilePath(step));
+            fExtField.saveToFile(SimParams::Paths::getFExtFilePath(step));
 
             double progressPercent = 100.0 * step / SimParams::timeSteps;
             std::cout << progressPercent << "% - saved: "

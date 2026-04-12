@@ -15,8 +15,8 @@ namespace SimParams {
     constexpr int gridSize = 100;
     constexpr double gridSpacing = domainLength / gridSize;
     constexpr double timeStep = 1e-6;
-    constexpr int timeSteps = 2'000'000;
-    constexpr int outputInterval = 20'000;
+    constexpr int timeSteps = 1'000'000;
+    constexpr int outputInterval = 10'000;
     constexpr double totalTime = timeStep * timeSteps;
     constexpr BoundaryType boundaryType = BoundaryType::Periodic;
 
@@ -28,14 +28,14 @@ namespace SimParams {
     constexpr double a_0 = 80.0 / 14.0;
 
     // External forcing parameters
-    constexpr double forceAmplitude = 1000.0;
+    constexpr double forceAmplitude = 10.0;
     constexpr int forceMode = 1;
     constexpr double forceOmega = 20.0;
 
     constexpr bool useExternalForce = true;
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC_periodic_forced_9";
+    const std::string simulationTag = "sHPFC_periodic_forced_10";
 
     // File paths
     namespace Paths {
@@ -87,6 +87,11 @@ namespace SimParams {
         inline std::string getMuFilePath(int step) {
             std::string prefix = getDescriptivePrefix();
             return outputDir + prefix + "/mu_" + std::to_string(step) + ".bin";
+        }
+
+        inline std::string getFExtFilePath(int step) {
+            std::string prefix = getDescriptivePrefix();
+            return outputDir + prefix + "/f_ext_" + std::to_string(step) + ".bin";
         }
 
         inline std::string getEnergiesFile() {
