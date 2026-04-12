@@ -35,7 +35,7 @@ namespace SimParams {
     constexpr bool useExternalForce = true;
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC_periodic_forced_10";
+    const std::string simulationTag = "sHPFC_periodic_forced_12";
 
     // File paths
     namespace Paths {

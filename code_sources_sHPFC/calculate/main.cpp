@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <filesystem>
 #include <cmath>
+#include <algorithm>
 
 template <BoundaryType BType>
 void calculateLaplacian(
@@ -149,35 +150,74 @@ inline double externalForce(double x, double t) {
     // return SimParams::forceAmplitude * std::sin(q * x) * std::cos(SimParams::forceOmega * t);
 }
 
+// Источник силы: прикладываем воздействие только в узких областях у краёв.
+// Дальше это воздействие будет распространяться по среде через propagateExternalForceField().
 template <BoundaryType BType>
-void calculateExternalForceField(
-    GridField<BType>& fExtField,
+void calculateExternalForceSource(
+    GridField<BType>& fExtSource,
     double currentTime,
     int step,
     double h
 ) {
-    setZeroInitialCondition(fExtField);
+    setZeroInitialCondition(fExtSource);
 
     if (!SimParams::useExternalForce) {
         return;
     }
 
+    // После этого шага источник выключаем
     if (step >= 50000) {
         return;
     }
 
-    const double limit = step / 5000.0;
+    // Плавное включение амплитуды в начале
+    const double ramp = std::min(1.0, step / 5000.0);
+
+    // Ширина области приложения силы у краёв
+    const int sourceWidth = 5;
+    const int N = fExtSource.size();
+
+    for (int i = 0; i < sourceWidth && i < N; ++i) {
+        const double xLeft = i * h;
+        fExtSource[i] = ramp * externalForce(xLeft, currentTime);
+    }
+
+    for (int i = std::max(0, N - sourceWidth); i < N; ++i) {
+        const double xRight = i * h;
+        fExtSource[i] = -ramp * externalForce(xRight, currentTime);
+    }
+}
+
+// Простое первое приближение распространения силы в веществе:
+//   ∂f/∂t = D_f Δf + (source - f)/tau
+//
+// Здесь:
+// - D_f отвечает за "растекание" воздействия в пространстве
+// - tau отвечает за время релаксации поля силы к заданному источнику
+//
+// Важно: D_f выбрано через CFL-подобный коэффициент, чтобы явная схема была устойчивее.
+template <BoundaryType BType>
+void propagateExternalForceField(
+    const GridField<BType>& fExtField,
+    const GridField<BType>& fExtSource,
+    GridField<BType>& fExtNext,
+    double dt,
+    double hSquared
+) {
+    const double diffusionCfl = 0.20;
+    const double diffusionCoeff = diffusionCfl * hSquared / dt;
+
+    // Время релаксации в шагах по времени
+    const double relaxationTime = 2000.0 * dt;
 
     for (int i = 0; i < fExtField.size(); ++i) {
-        const double x = i * h;
-        const double force = externalForce(x, currentTime);
+        const double lap = fExtField.laplacian(i, hSquared);
 
-        if (i < limit) {
-            fExtField[i] = force;
-        }
-        else if (i > SimParams::gridSize - 1 - limit) {
-            fExtField[i] = -force;
-        }
+        fExtNext[i] = fExtField[i]
+                    + dt * (
+                        diffusionCoeff * lap
+                        + (fExtSource[i] - fExtField[i]) / relaxationTime
+                    );
     }
 }
 
@@ -202,7 +242,10 @@ int main() {
 
     GridField<SimParams::boundaryType> xi(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> coarseXi(SimParams::gridSize, 0.0, 0.0);
+
+    GridField<SimParams::boundaryType> fExtSource(SimParams::gridSize, 0.0, 0.0);
     GridField<SimParams::boundaryType> fExtField(SimParams::gridSize, 0.0, 0.0);
+    GridField<SimParams::boundaryType> fExtNext(SimParams::gridSize, 0.0, 0.0);
 
     GridField<SimParams::boundaryType> energies(
         (SimParams::timeSteps / SimParams::outputInterval) + 1, 0.0, 0.0
@@ -210,6 +253,7 @@ int main() {
 
     phi.loadInitialCondition(SimParams::Paths::initialConditionFile);
     setZeroInitialCondition(v);
+    setZeroInitialCondition(fExtField);
 
     const double h = SimParams::gridSpacing;
     const double hSquared = h * h;
@@ -255,10 +299,14 @@ int main() {
         );
 
         applyCoarseGraining(xi, coarseXi, h, SimParams::a_0);
-        calculateLaplacian(v, vLaplacian, hSquared);
-        calculateExternalForceField(fExtField, currentTime, step, h);
 
-        // Обновление v с внешней силой
+        calculateLaplacian(v, vLaplacian, hSquared);
+
+        // Строим источник силы у краёв и распространяем его по среде
+        calculateExternalForceSource(fExtSource, currentTime, step, h);
+        propagateExternalForceField(fExtField, fExtSource, fExtNext, dt, hSquared);
+
+        // Обновление v с уже накопленным/распространившимся полем силы
         for (int i = 0; i < SimParams::gridSize; ++i) {
             vNext[i] = v[i]
                      + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i] + fExtField[i])
@@ -296,6 +344,7 @@ int main() {
 
         swap(phi, phiNext);
         swap(v, vNext);
+        swap(fExtField, fExtNext);
     }
 
     std::string energyFilePath = SimParams::Paths::getEnergiesFile();

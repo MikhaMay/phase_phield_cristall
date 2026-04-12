@@ -136,12 +136,7 @@ for frame in range(frames):
     # f_ext — прямо под phi
     axs[3].plot(x_space, f_ext, 'm-')
     axs[3].set_xlim(0, params.domain_length)
-
-    f_ext_abs_max = np.max(np.abs(f_ext)) if len(f_ext) > 0 else 0.0
-    if f_ext_abs_max > 0:
-        axs[3].set_ylim(-1.1 * f_ext_abs_max, 1.1 * f_ext_abs_max)
-    else:
-        axs[3].set_ylim(-1.0, 1.0)
+    axs[3].set_ylim(-10, 10)
 
     axs[3].set_title('Внешняя сила $f_{ext}$')
     axs[3].set_xlabel('x')
