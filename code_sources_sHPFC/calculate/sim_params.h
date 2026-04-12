@@ -28,14 +28,14 @@ namespace SimParams {
     constexpr double a_0 = 80.0 / 14.0;
 
     // External forcing parameters
-    constexpr double forceAmplitude = 8.0;
+    constexpr double forceAmplitude = 1000.0;
     constexpr int forceMode = 1;
     constexpr double forceOmega = 20.0;
 
     constexpr bool useExternalForce = true;
 
     // Custom tag for the current simulation
-    const std::string simulationTag = "sHPFC_periodic_forced_8";
+    const std::string simulationTag = "sHPFC_periodic_forced_9";
 
     // File paths
     namespace Paths {

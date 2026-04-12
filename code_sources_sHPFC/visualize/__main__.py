@@ -136,7 +136,7 @@ for frame in range(frames):
     # График поля xi
     axs[3].plot(x_space, xi, 'r-')
     axs[3].set_xlim(0, params.domain_length)
-    axs[3].set_ylim(-3, 10)
+    axs[3].set_ylim(-5, 5)
     axs[3].set_title('Поле xi')
     axs[3].set_xlabel('x')
 
@@ -150,14 +150,14 @@ for frame in range(frames):
     # График поля v
     axs[5].plot(x_space, v, 'r-')
     axs[5].set_xlim(0, params.domain_length)
-    axs[5].set_ylim(-3, 10)
+    axs[5].set_ylim(-5, 5)
     axs[5].set_title('Поле скорости')
     axs[5].set_xlabel('x')
 
     # График поля лапласиана v
     axs[6].plot(x_space, vlap, 'r-')
     axs[6].set_xlim(0, params.domain_length)
-    axs[6].set_ylim(-3, 10)
+    axs[6].set_ylim(-5, 5)
     axs[6].set_title('Поле лапласиана скорости')
     axs[6].set_xlabel('x')
 

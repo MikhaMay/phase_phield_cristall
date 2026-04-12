@@ -143,8 +143,10 @@ inline double externalForce(double x, double t) {
         return 0.0;
     }
 
-    const double q = 2.0 * M_PI * SimParams::forceMode / SimParams::domainLength;
-    return SimParams::forceAmplitude * std::sin(q * x) * std::cos(SimParams::forceOmega * t);
+    return SimParams::forceAmplitude;
+
+    // const double q = 2.0 * M_PI * SimParams::forceMode / SimParams::domainLength;
+    // return SimParams::forceAmplitude * std::sin(q * x) * std::cos(SimParams::forceOmega * t);
 }
 
 int main() {
@@ -225,7 +227,18 @@ int main() {
         // Обновление v с внешней силой
         for (int i = 0; i < SimParams::gridSize; ++i) {
             double x = i * h;
-            double fExt = externalForce(x, currentTime);
+
+            double fExt = 0.0;
+            if (step < 500) {
+                double limit = step / 50.0;
+                if (i < limit) {
+                    fExt = externalForce(x, currentTime);
+                }
+                if (i > SimParams::gridSize - 1 - limit) {
+                    fExt = -externalForce(x, currentTime);
+                }
+            }
+
 
             vNext[i] = v[i]
                      + dt * (coarseXi[i] + SimParams::Gamma_S * vLaplacian[i] + fExt)
